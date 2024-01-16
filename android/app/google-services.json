@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "261252181636",
-    "project_id": "work-hub-93325",
-    "storage_bucket": "work-hub-93325.appspot.com"
+    "project_number": "566802056091",
+    "project_id": "work-hub-7610d",
+    "storage_bucket": "work-hub-7610d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:261252181636:android:69da44e4f5c08ae9f19cd1",
+        "mobilesdk_app_id": "1:566802056091:android:9563247707796fdda4d73e",
+        "android_client_info": {
+          "package_name": "com.example.workhub_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkltPN1wvyt_F5csLhXusbQ02dNDuhYVQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:566802056091:android:a25511d11d8f75a5a4d73e",
         "android_client_info": {
           "package_name": "com.example.workhub_web"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDKS6vBA5x24oTd8wKfX9ghJXFqAlVEDDA"
+          "current_key": "AIzaSyCkltPN1wvyt_F5csLhXusbQ02dNDuhYVQ"
         }
       ],
       "services": {
