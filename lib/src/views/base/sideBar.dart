@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workhub_web/src/views/base/meetingRooms/meetingRoomsPage.dart';
 
 import '../../controllers/auth/auth_controller.dart';
 
@@ -73,8 +74,8 @@ class _BaseScreenState extends State<BaseScreen> {
                     controller: pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      Container(color: Colors.red),
-                      Container(color: Colors.yellow),
+                      Container(color: Colors.blue),
+                      MeetingRoomsPage(),
                       Container(color: Colors.blue),
                       Container(color: Colors.green),
                     ]),
