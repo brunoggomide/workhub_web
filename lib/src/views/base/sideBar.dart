@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:workhub_web/src/views/base/meetingRooms/meetingRoomsPage.dart';
+import 'package:workhub_web/src/views/base/reservations/reservationsPage.dart';
 
-import '../../controllers/auth/auth_controller.dart';
+//import '../../controllers/auth/auth_controller.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
@@ -66,7 +67,7 @@ class _BaseScreenState extends State<BaseScreen> {
                       ),
                     ),
                   ]),
-              VerticalDivider(thickness: 1, width: 1),
+              const VerticalDivider(thickness: 1, width: 1),
 
               // Main content
               Expanded(
@@ -74,8 +75,8 @@ class _BaseScreenState extends State<BaseScreen> {
                     controller: pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      Container(color: Colors.blue),
-                      MeetingRoomsPage(),
+                      const ReservationsPage(),
+                      const MeetingRoomsPage(),
                       Container(color: Colors.blue),
                       Container(color: Colors.green),
                     ]),
