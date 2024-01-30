@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:workhub_web/src/views/base/meetingRooms/meetingRoomsPage.dart';
-import 'package:workhub_web/src/views/base/reservations/reservationsPage.dart';
+import 'package:workhub_web/src/views/meetingRooms/meetingRoomsPage.dart';
+import 'package:workhub_web/src/views/reservations/reservationsPage.dart';
+
+import '../../controllers/auth/auth_controller.dart';
 
 //import '../../controllers/auth/auth_controller.dart';
 
@@ -28,10 +30,14 @@ class _BaseScreenState extends State<BaseScreen> {
                   backgroundColor: const Color.fromRGBO(55, 73, 87, 1),
                   selectedIndex: currentIndex,
                   onDestinationSelected: (int index) {
-                    setState(() {
-                      currentIndex = index;
-                      pageController.jumpToPage(index);
-                    });
+                    if (index == 4) {
+                      AuthController().logout(context);
+                    } else {
+                      setState(() {
+                        currentIndex = index;
+                        pageController.jumpToPage(index);
+                      });
+                    }
                   },
                   labelType: NavigationRailLabelType.selected,
                   destinations: const [
@@ -63,6 +69,13 @@ class _BaseScreenState extends State<BaseScreen> {
                       icon: Icon(Icons.person, color: Colors.white),
                       label: Text(
                         'Perfil',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    NavigationRailDestination(
+                      icon: Icon(Icons.logout, color: Colors.white),
+                      label: Text(
+                        'Logout',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
