@@ -3,8 +3,8 @@ import 'package:workhub_web/src/views/meetingRooms/meetingRoomsPage.dart';
 import 'package:workhub_web/src/views/reservations/reservationsPage.dart';
 
 import '../../controllers/auth/auth_controller.dart';
-
-//import '../../controllers/auth/auth_controller.dart';
+import '../meetingRooms/addMeetingRoomPage.dart';
+import '../reservations/reservationsCalendarPage.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
@@ -88,10 +88,12 @@ class _BaseScreenState extends State<BaseScreen> {
                     controller: pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      const ReservationsPage(),
-                      const MeetingRoomsPage(),
+                      ReservationsPage(pageController: pageController),
+                      MeetingRoomsPage(pageController: pageController),
                       Container(color: Colors.blue),
                       Container(color: Colors.green),
+                      ReservationsCalendarPage(pageController: pageController),
+                      AddMeetingRoomPage(pageController: pageController),
                     ]),
               ),
             ],
@@ -99,5 +101,9 @@ class _BaseScreenState extends State<BaseScreen> {
         );
       },
     );
+  }
+
+  void navigateToPage(int pageIndex) {
+    pageController.jumpToPage(pageIndex);
   }
 }
