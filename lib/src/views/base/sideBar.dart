@@ -3,7 +3,7 @@ import 'package:workhub_web/src/views/meetingRooms/meetingRoomsPage.dart';
 import 'package:workhub_web/src/views/reservations/reservationsPage.dart';
 
 import '../../controllers/auth/auth_controller.dart';
-import '../meetingRooms/addMeetingRoomPage.dart';
+import '../meetingRooms/addMeetingRooms/addMeetingRoomPage.dart';
 import '../reservations/reservationsCalendarPage.dart';
 
 class BaseScreen extends StatefulWidget {
