@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../controllers/meeting_room/meeting_room_controller.dart';
+
 class AddMeetingRoomForm extends StatefulWidget {
   const AddMeetingRoomForm({Key? key}) : super(key: key);
 
@@ -19,7 +21,6 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   final TextEditingController descricaoController = TextEditingController();
   final TextEditingController valorController = TextEditingController();
   final TextEditingController capacidadeController = TextEditingController();
-  final TextEditingController uidCoworkingController = TextEditingController();
 
   final ValueNotifier<bool> acessibilidadeController =
       ValueNotifier<bool>(false);
@@ -34,7 +35,35 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   DateTime? dtCriacao;
   DateTime? dtAtualizacao;
 
-  List<String> ufs = ['SP', 'RJ', 'MG', 'ES']; // Lista de UFs
+  List<String> ufs = [
+    'AC',
+    'AL',
+    'AP',
+    'AM',
+    'BA',
+    'CE',
+    'DF',
+    'ES',
+    'GO',
+    'MA',
+    'MT',
+    'MS',
+    'MG',
+    'PA',
+    'PB',
+    'PR',
+    'PE',
+    'PI',
+    'RJ',
+    'RN',
+    'RS',
+    'RO',
+    'RR',
+    'SC',
+    'SP',
+    'SE',
+    'TO'
+  ]; // Lista de UFs
 
   @override
   void initState() {
@@ -54,7 +83,6 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
     descricaoController.dispose();
     valorController.dispose();
     capacidadeController.dispose();
-    uidCoworkingController.dispose();
 
     acessibilidadeController.dispose();
     arCondicionadoController.dispose();
@@ -82,7 +110,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
             const SizedBox(
               height: 15,
             ),
-            const Row(
+            Row(
               children: [
                 Expanded(
                   flex: 2,
@@ -91,6 +119,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('CEP'),
                       TextField(
+                        controller: cepController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -108,6 +137,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Logradouro'),
                       TextField(
+                        controller: logradouroController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -125,6 +155,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Número'),
                       TextField(
+                        controller: numeroController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -142,6 +173,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Bairro'),
                       TextField(
+                        controller: bairroController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -163,6 +195,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Complemento'),
                       TextField(
+                        controller: complementoController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -208,6 +241,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Cidade'),
                       TextField(
+                        controller: cidadeController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -225,6 +259,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Título da sala'),
                       TextField(
+                        controller: tituloController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -246,6 +281,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Descrição'),
                       TextField(
+                        controller: descricaoController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -263,6 +299,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Valor da hora'),
                       TextField(
+                        controller: valorController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -280,6 +317,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Capacidade'),
                       TextField(
+                        controller: capacidadeController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                         ),
@@ -418,7 +456,62 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                   style: ButtonStyle(
                     fixedSize: MaterialStateProperty.all(const Size(110, 40)),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    String cep = cepController.text;
+                    String logradouro = logradouroController.text;
+                    String numero = numeroController.text;
+                    String bairro = bairroController.text;
+                    String complemento = complementoController.text;
+                    String uf = selectedUf;
+                    String cidade = cidadeController.text;
+                    String titulo = tituloController.text;
+                    String descricao = descricaoController.text;
+                    String valor = valorController.text;
+                    String capacidade = capacidadeController.text;
+                    bool acessibilidade = acessibilidadeController.value;
+                    bool arCondicionado = arCondicionadoController.value;
+                    bool projetor = projetorController.value;
+                    bool quadroBranco = quadroBrancoController.value;
+                    bool tv = tvController.value;
+                    DateTime dtCriacao = DateTime.now();
+                    if (cep.isNotEmpty &&
+                        logradouro.isNotEmpty &&
+                        numero.isNotEmpty &&
+                        bairro.isNotEmpty &&
+                        uf.isNotEmpty &&
+                        cidade.isNotEmpty &&
+                        titulo.isNotEmpty &&
+                        descricao.isNotEmpty &&
+                        valor.isNotEmpty &&
+                        capacidade.isNotEmpty) {
+                      MeetingRoomController().addMeetingRoom(
+                          cep,
+                          logradouro,
+                          numero,
+                          bairro,
+                          complemento,
+                          uf,
+                          cidade,
+                          titulo,
+                          descricao,
+                          valor,
+                          capacidade,
+                          acessibilidade,
+                          arCondicionado,
+                          projetor,
+                          quadroBranco,
+                          tv,
+                          dtCriacao);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.red,
+                          content:
+                              Text('Preencha todos os campos obrigatórios.'),
+                        ),
+                      );
+                    }
+                  },
                   child: const Text('Adicionar'),
                 ),
                 const SizedBox(
