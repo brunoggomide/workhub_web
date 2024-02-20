@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
 
@@ -29,6 +33,9 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   final ValueNotifier<bool> projetorController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> quadroBrancoController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> tvController = ValueNotifier<bool>(false);
+
+  File? _pickedImage;
+  Uint8List? _pickedImageWeb;
 
   //var foto;
 
@@ -432,13 +439,18 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Foto'),
-                      Container(
-                        width: 100,
-                        height: 100,
-                        color: Colors.grey,
-                        child: const Icon(
-                          Icons.camera_alt,
-                          size: 50,
+                      GestureDetector(
+                        onTap: () {
+                          _pickImage();
+                        },
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          color: Colors.grey,
+                          child: const Icon(
+                            Icons.camera_alt,
+                            size: 50,
+                          ),
                         ),
                       ),
                     ],
@@ -531,5 +543,42 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
         ),
       ),
     );
+  }
+
+  Future<void> _pickImage() async {
+    if (!kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var selected = File(image.path);
+        setState(() {
+          _pickedImage = selected;
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Nenhuma imagem selecionada.'),
+          ),
+        );
+      }
+    } else {
+      final ImagePicker _picker = ImagePicker();
+      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        var f = await image.readAsBytes();
+        setState(() {
+          _pickedImageWeb = f;
+          _pickedImage = File('a');
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Nenhuma imagem selecionada.'),
+          ),
+        );
+      }
+    }
   }
 }
