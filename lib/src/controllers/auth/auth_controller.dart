@@ -115,4 +115,8 @@ class AuthController {
       ),
     );
   }
+
+  idUsuario() {
+    return FirebaseAuth.instance.currentUser!.uid;
+  }
 }
