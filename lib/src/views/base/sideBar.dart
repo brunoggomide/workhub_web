@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../controllers/auth/auth_controller.dart';
+import '../desks/desk.dart';
 
 class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key}) : super(key: key);
@@ -75,7 +76,7 @@ class _BaseScreenState extends State<BaseScreen> {
                     children: [
                       Container(color: Colors.red),
                       Container(color: Colors.yellow),
-                      Container(color: Colors.blue),
+                      Desks(),
                       Container(color: Colors.green),
                     ]),
               ),

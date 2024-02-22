@@ -39,6 +39,10 @@ dependencies:
   cloud_firestore: ^4.14.0
   firebase_auth: ^4.16.0
   shared_preferences: ^2.2.2
+  image_picker: ^1.0.4
+  http: ^0.13.6
+  mask_text_input_formatter: ^2.9.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
