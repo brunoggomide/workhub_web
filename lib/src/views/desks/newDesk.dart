@@ -452,7 +452,6 @@ class _NewDeskState extends State<NewDesk> {
                                     _cidadeController.text.isNotEmpty &&
                                     _estadoController.text.isNotEmpty &&
                                     _bairroController.text.isNotEmpty &&
-                                    _complementoAddress.text.isNotEmpty &&
                                     _description.text.isNotEmpty) {
                                   var d = Desk(
                                     AuthController().idUsuario(),
