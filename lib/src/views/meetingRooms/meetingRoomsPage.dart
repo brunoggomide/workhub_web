@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'addMeetingRoomPage.dart';
-
 class MeetingRoomsPage extends StatelessWidget {
-  const MeetingRoomsPage({super.key});
+  final PageController pageController;
+
+  const MeetingRoomsPage({Key? key, required this.pageController})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,20 +18,14 @@ class MeetingRoomsPage extends StatelessWidget {
               child: IconButton(
                 icon: const Icon(Icons.add_box_outlined),
                 iconSize: 36.0,
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddMeetingRoomPage(),
-                    ),
-                  );
-                },
+                onPressed: () => pageController.jumpToPage(5),
               ),
             ),
           ),
           Row(
             children: [
-              Expanded(child: SingleChildScrollView(
+              Expanded(
+                  child: SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: DataTable(
                   columns: const <DataColumn>[
@@ -58,7 +53,6 @@ class MeetingRoomsPage extends StatelessWidget {
                         style: TextStyle(fontStyle: FontStyle.italic),
                       ),
                     ),
-
                   ],
                   rows: [
                     DataRow(
@@ -72,15 +66,11 @@ class MeetingRoomsPage extends StatelessWidget {
                             children: <Widget>[
                               IconButton(
                                 icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  // Adicione a ação do botão de editar aqui
-                                },
+                                onPressed: () {},
                               ),
                               IconButton(
                                 icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  // Adicione a ação do botão de excluir aqui
-                                },
+                                onPressed: () {},
                               ),
                             ],
                           ),
@@ -98,15 +88,11 @@ class MeetingRoomsPage extends StatelessWidget {
                             children: <Widget>[
                               IconButton(
                                 icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  // Adicione a ação do botão de editar aqui
-                                },
+                                onPressed: () {},
                               ),
                               IconButton(
                                 icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  // Adicione a ação do botão de excluir aqui
-                                },
+                                onPressed: () {},
                               ),
                             ],
                           ),
@@ -124,15 +110,11 @@ class MeetingRoomsPage extends StatelessWidget {
                             children: <Widget>[
                               IconButton(
                                 icon: Icon(Icons.edit),
-                                onPressed: () {
-                                  // Adicione a ação do botão de editar aqui
-                                },
+                                onPressed: () {},
                               ),
                               IconButton(
                                 icon: Icon(Icons.delete),
-                                onPressed: () {
-                                  // Adicione a ação do botão de excluir aqui
-                                },
+                                onPressed: () {},
                               ),
                             ],
                           ),
