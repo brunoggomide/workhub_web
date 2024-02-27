@@ -24,7 +24,7 @@ class MeetingRoomController {
     tv,
     dtCriacao,
   ) {
-    var uidCoworking = AuthController().getLoggedUserUid();
+    var uidCoworking = AuthController().idUsuario();
     _meetingRooms.add({
       'cep': cep,
       'logradouro': logradouro,
