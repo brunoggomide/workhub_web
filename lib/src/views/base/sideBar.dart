@@ -91,11 +91,8 @@ class _BaseScreenState extends State<BaseScreen> {
                     children: [
                       ReservationsPage(pageController: pageController),
                       MeetingRoomsPage(pageController: pageController),
-                      Container(color: Colors.blue),
-                      Container(color: Colors.red),
-                      Container(color: Colors.yellow),
                       Desks(),
-                      Container(color: Colors.green),
+                      Container(color: Colors.blue),
                       ReservationsCalendarPage(pageController: pageController),
                       AddMeetingRoomPage(pageController: pageController),
                     ]),
