@@ -430,7 +430,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(
@@ -440,19 +440,25 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     children: [
                       Text('Foto'),
                       GestureDetector(
-                        onTap: () {
-                          _pickImage();
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          color: Colors.grey,
-                          child: const Icon(
-                            Icons.camera_alt,
-                            size: 50,
-                          ),
-                        ),
-                      ),
+                          onTap: () {
+                            _pickImage();
+                          },
+                          child: _pickedImage == null
+                              ? Container(
+                                  width: 100,
+                                  height: 100,
+                                  color: Colors.grey,
+                                  child: const Icon(
+                                    Icons.camera_alt,
+                                    size: 50,
+                                  ),
+                                )
+                              : Image.memory(
+                                  _pickedImageWeb!,
+                                  fit: BoxFit.cover,
+                                  width: 100,
+                                  height: 100,
+                                )),
                     ],
                   ),
                 ),
@@ -513,7 +519,8 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                           projetor,
                           quadroBranco,
                           tv,
-                          dtCriacao);
+                          dtCriacao,
+                          _pickedImageWeb!);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

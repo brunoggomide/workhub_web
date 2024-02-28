@@ -367,7 +367,6 @@ class _NewDeskState extends State<NewDesk> {
                                     onChanged: (value) {
                                       setState(() {
                                         espacoInterativo = value;
-                                        // Adicione ação desejada aqui
                                       });
                                     },
                                   ),
@@ -393,7 +392,6 @@ class _NewDeskState extends State<NewDesk> {
                                     onChanged: (value) {
                                       setState(() {
                                         bicicletario = value;
-                                        // Adicione ação desejada aqui
                                       });
                                     },
                                   ),
@@ -419,7 +417,6 @@ class _NewDeskState extends State<NewDesk> {
                                     onChanged: (value) {
                                       setState(() {
                                         acessibilidade = value;
-                                        // Adicione ação desejada aqui
                                       });
                                     },
                                   ),
