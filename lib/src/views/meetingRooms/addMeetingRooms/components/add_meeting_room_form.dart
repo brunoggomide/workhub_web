@@ -484,8 +484,8 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     String cidade = cidadeController.text;
                     String titulo = tituloController.text;
                     String descricao = descricaoController.text;
-                    String valor = valorController.text;
-                    String capacidade = capacidadeController.text;
+                    double valor = double.parse(valorController.text);
+                    int capacidade = int.parse(capacidadeController.text);
                     bool acessibilidade = acessibilidadeController.value;
                     bool arCondicionado = arCondicionadoController.value;
                     bool projetor = projetorController.value;
@@ -500,8 +500,8 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                         cidade.isNotEmpty &&
                         titulo.isNotEmpty &&
                         descricao.isNotEmpty &&
-                        valor.isNotEmpty &&
-                        capacidade.isNotEmpty) {
+                        valor.isFinite &&
+                        capacidade.isFinite) {
                       MeetingRoomController().addMeetingRoom(
                           cep,
                           logradouro,
