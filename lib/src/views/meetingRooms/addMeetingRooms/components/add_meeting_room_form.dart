@@ -436,10 +436,6 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     flex: 1,
                     child: Column(
                       children: [
-                        ListTile(
-                          title: Text(
-                              'Fotos selecionadas: ${_pickedImages.length}'),
-                        ),
                         GestureDetector(
                           onTap: _pickImage,
                           child: Container(
@@ -452,16 +448,39 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                             ),
                           ),
                         ),
-                        GridView.count(
-                          shrinkWrap: true,
-                          crossAxisCount: 3,
-                          children: _pickedImagesWeb.map((image) {
-                            return Image.memory(
-                              image,
-                              fit: BoxFit.cover,
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children:
+                              _pickedImagesWeb.asMap().entries.map((entry) {
+                            int index = entry.key;
+                            Uint8List image = entry.value;
+                            return Container(
+                              width: 100,
+                              height: 100,
+                              child: Stack(
+                                alignment: Alignment.topRight,
+                                children: [
+                                  Image.memory(
+                                    image,
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      setState(() {
+                                        _pickedImagesWeb.removeAt(index);
+                                        _pickedImages.removeAt(index);
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             );
                           }).toList(),
-                        ),
+                        )
                       ],
                     )),
               ],
@@ -522,7 +541,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                           quadroBranco,
                           tv,
                           dtCriacao,
-                          _pickedImageWeb!);
+                          _pickedImagesWeb);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

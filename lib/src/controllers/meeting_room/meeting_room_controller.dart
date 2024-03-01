@@ -26,22 +26,27 @@ class MeetingRoomController {
     bool quadroBranco,
     bool tv,
     DateTime dtCriacao,
-    Uint8List imagem,
+    List<Uint8List> imagens,
   ) async {
-    var imageName = const Uuid().v1();
     var uidCoworking = AuthController().idUsuario();
-    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref('/meeting_rooms_photos/$uidCoworking/$imageName.jpg');
+    List<String> downloadURLs = [];
 
-    String downloadURL = '';
-    try {
-      await ref.putData(imagem);
+    for (Uint8List imagem in imagens) {
+      var imageName = const Uuid().v1();
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref('/meeting_rooms_photos/$uidCoworking/$imageName.jpg');
+      print(imagem);
 
-      downloadURL =
-          await ref.getDownloadURL().timeout(const Duration(seconds: 10));
-    } catch (e) {
-      print('Erro ao carregar a imagem ou obter a URL: $e');
-      return;
+      try {
+        await ref.putData(imagem);
+
+        String downloadURL =
+            await ref.getDownloadURL().timeout(const Duration(seconds: 10));
+        downloadURLs.add(downloadURL);
+      } catch (e) {
+        print('Erro ao carregar a imagem ou obter a URL: $e');
+        return;
+      }
     }
 
     try {
@@ -64,7 +69,7 @@ class MeetingRoomController {
         'quadroBranco': quadroBranco,
         'tv': tv,
         'dtCriacao': dtCriacao,
-        'imagem': downloadURL,
+        'imagens': downloadURLs,
       });
       print('Sala de reunião adicionada com sucesso.');
     } catch (e) {
