@@ -36,11 +36,10 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
 
   File? _pickedImage;
   Uint8List? _pickedImageWeb;
-
-  //var foto;
+  List<File> _pickedImages = [];
+  List<Uint8List> _pickedImagesWeb = [];
 
   DateTime? dtCriacao;
-  DateTime? dtAtualizacao;
 
   List<String> ufs = [
     'AC',
@@ -75,7 +74,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   @override
   void initState() {
     super.initState();
-    selectedUf = ufs[0]; // Inicialize selectedUf aqui
+    selectedUf = ufs[0];
   }
 
   @override
@@ -434,34 +433,37 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                   width: 10,
                 ),
                 Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Foto'),
-                      GestureDetector(
-                          onTap: () {
-                            _pickImage();
-                          },
-                          child: _pickedImage == null
-                              ? Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: Colors.grey,
-                                  child: const Icon(
-                                    Icons.camera_alt,
-                                    size: 50,
-                                  ),
-                                )
-                              : Image.memory(
-                                  _pickedImageWeb!,
-                                  fit: BoxFit.cover,
-                                  width: 100,
-                                  height: 100,
-                                )),
-                    ],
-                  ),
-                ),
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        ListTile(
+                          title: Text(
+                              'Fotos selecionadas: ${_pickedImages.length}'),
+                        ),
+                        GestureDetector(
+                          onTap: _pickImage,
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            color: Colors.grey,
+                            child: const Icon(
+                              Icons.camera_alt,
+                              size: 50,
+                            ),
+                          ),
+                        ),
+                        GridView.count(
+                          shrinkWrap: true,
+                          crossAxisCount: 3,
+                          children: _pickedImagesWeb.map((image) {
+                            return Image.memory(
+                              image,
+                              fit: BoxFit.cover,
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    )),
               ],
             ),
             const SizedBox(
@@ -555,11 +557,11 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   Future<void> _pickImage() async {
     if (!kIsWeb) {
       final ImagePicker _picker = ImagePicker();
-      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        var selected = File(image.path);
+      List<XFile>? images = await _picker.pickMultiImage();
+      if (images != null) {
+        var selected = images.map((image) => File(image.path)).toList();
         setState(() {
-          _pickedImage = selected;
+          _pickedImages.addAll(selected);
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -571,12 +573,13 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
       }
     } else {
       final ImagePicker _picker = ImagePicker();
-      XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        var f = await image.readAsBytes();
+      List<XFile>? images = await _picker.pickMultiImage();
+      if (images != null) {
+        var files =
+            await Future.wait(images.map((image) => image.readAsBytes()));
         setState(() {
-          _pickedImageWeb = f;
-          _pickedImage = File('a');
+          _pickedImagesWeb.addAll(files);
+          _pickedImages.addAll(images.map((image) => File('a')).toList());
         });
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
