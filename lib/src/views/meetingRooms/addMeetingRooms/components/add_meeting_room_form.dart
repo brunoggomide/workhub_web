@@ -436,17 +436,23 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                     flex: 1,
                     child: Column(
                       children: [
-                        GestureDetector(
-                          onTap: _pickImage,
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.grey,
-                            child: const Icon(
-                              Icons.camera_alt,
-                              size: 50,
-                            ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Colors.grey),
+                            fixedSize: MaterialStateProperty.all(const Size(200, 40)),
                           ),
+                          onPressed: () => _pickImage(),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget> [
+                              Icon(Icons.upload_file_outlined),
+                              Text(' Selecionar imagens'),
+                              
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
                         ),
                         Wrap(
                           spacing: 10,

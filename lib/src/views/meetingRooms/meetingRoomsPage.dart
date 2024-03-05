@@ -14,14 +14,23 @@ class MeetingRoomsPage extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: IconButton(
-                icon: const Icon(Icons.add_box_outlined),
-                iconSize: 36.0,
+              padding: const EdgeInsets.all(10.0),
+              child: RawMaterialButton(
                 onPressed: () => pageController.jumpToPage(5),
+                fillColor: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                elevation: 2.0,
+                padding: const EdgeInsets.all(12.0),
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
+          
           Row(
             children: [
               Expanded(
