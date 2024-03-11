@@ -3,11 +3,14 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
+import '../../../../services/cep.dart';
+import '../../../desks/components/moneyFormat.dart';
 
 class AddMeetingRoomForm extends StatefulWidget {
-  const AddMeetingRoomForm({Key? key}) : super(key: key);
+  const AddMeetingRoomForm({super.key});
 
   @override
   State<AddMeetingRoomForm> createState() => _AddMeetingRoomFormState();
@@ -21,10 +24,12 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   final TextEditingController complementoController = TextEditingController();
   late String selectedUf;
   final TextEditingController cidadeController = TextEditingController();
+  final TextEditingController ufController = TextEditingController();
   final TextEditingController tituloController = TextEditingController();
   final TextEditingController descricaoController = TextEditingController();
   final TextEditingController valorController = TextEditingController();
   final TextEditingController capacidadeController = TextEditingController();
+  final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
 
   final ValueNotifier<bool> acessibilidadeController =
       ValueNotifier<bool>(false);
@@ -33,49 +38,24 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   final ValueNotifier<bool> projetorController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> quadroBrancoController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> tvController = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> cafeController = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> estacionamentoController =
+      ValueNotifier<bool>(false);
+  final ValueNotifier<bool> bicicletarioController = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> espacoInterativoController =
+      ValueNotifier<bool>(false);
 
-  File? _pickedImage;
-  Uint8List? _pickedImageWeb;
-  List<File> _pickedImages = [];
-  List<Uint8List> _pickedImagesWeb = [];
+  final cepFormat = MaskTextInputFormatter(
+    mask: '#####-###',
+    filter: {
+      '#': RegExp(r'[0-9]'),
+    },
+  );
+
+  final List<File> _pickedImages = [];
+  final List<Uint8List> _pickedImagesWeb = [];
 
   DateTime? dtCriacao;
-
-  List<String> ufs = [
-    'AC',
-    'AL',
-    'AP',
-    'AM',
-    'BA',
-    'CE',
-    'DF',
-    'ES',
-    'GO',
-    'MA',
-    'MT',
-    'MS',
-    'MG',
-    'PA',
-    'PB',
-    'PR',
-    'PE',
-    'PI',
-    'RJ',
-    'RN',
-    'RS',
-    'RO',
-    'RR',
-    'SC',
-    'SP',
-    'SE',
-    'TO'
-  ]; // Lista de UFs
-
-  @override
-  void initState() {
-    super.initState();
-    selectedUf = ufs[0];
-  }
 
   @override
   void dispose() {
@@ -101,481 +81,647 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.grey[50]),
-      child: Padding(
-        padding: const EdgeInsets.all(14.0),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 15,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('CEP'),
-                      TextField(
-                        controller: cepController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Logradouro'),
-                      TextField(
-                        controller: logradouroController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Número'),
-                      TextField(
-                        controller: numeroController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Bairro'),
-                      TextField(
-                        controller: bairroController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Complemento'),
-                      TextField(
-                        controller: complementoController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('UF'),
-                      DropdownButton<String>(
-                        hint: Text('Selecione a UF'),
-                        value: selectedUf,
-                        onChanged: (String? value) {
-                          setState(() {
-                            selectedUf = value ?? '';
-                          });
-                        },
-                        items:
-                            ufs.map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Cidade'),
-                      TextField(
-                        controller: cidadeController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Título da sala'),
-                      TextField(
-                        controller: tituloController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Descrição'),
-                      TextField(
-                        controller: descricaoController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Valor da hora'),
-                      TextField(
-                        controller: valorController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Capacidade'),
-                      TextField(
-                        controller: capacidadeController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Recursos da sala'),
-                      Row(
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Container(
+          width: 1000.0,
+          padding: const EdgeInsets.all(16.0),
+          child: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return SingleChildScrollView(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          ValueListenableBuilder<bool>(
-                            valueListenable: acessibilidadeController,
-                            builder: (context, value, child) {
-                              return Checkbox(
-                                value: value,
-                                onChanged: (bool? value) {
-                                  acessibilidadeController.value =
-                                      value ?? false;
-                                },
-                              );
-                            },
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            child: Text(
+                              'Nova Sala de Reunião',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                              ),
+                            ),
                           ),
-                          Text('Acessibilidade'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          ValueListenableBuilder<bool>(
-                            valueListenable: arCondicionadoController,
-                            builder: (context, value, child) {
-                              return Checkbox(
-                                value: value,
-                                onChanged: (bool? value) {
-                                  arCondicionadoController.value =
-                                      value ?? false;
-                                },
-                              );
-                            },
-                          ),
-                          Text('Ar Condicionado'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          ValueListenableBuilder<bool>(
-                            valueListenable: projetorController,
-                            builder: (context, value, child) {
-                              return Checkbox(
-                                value: value,
-                                onChanged: (bool? value) {
-                                  projetorController.value = value ?? false;
-                                },
-                              );
-                            },
-                          ),
-                          Text('Projetor'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          ValueListenableBuilder<bool>(
-                            valueListenable: quadroBrancoController,
-                            builder: (context, value, child) {
-                              return Checkbox(
-                                value: value,
-                                onChanged: (bool? value) {
-                                  quadroBrancoController.value = value ?? false;
-                                },
-                              );
-                            },
-                          ),
-                          Text('Quadro Branco'),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          ValueListenableBuilder<bool>(
-                            valueListenable: tvController,
-                            builder: (context, value, child) {
-                              return Checkbox(
-                                value: value,
-                                onChanged: (bool? value) {
-                                  tvController.value = value ?? false;
-                                },
-                              );
-                            },
-                          ),
-                          Text('TV'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.grey),
-                            fixedSize: MaterialStateProperty.all(const Size(200, 40)),
-                          ),
-                          onPressed: () => _pickImage(),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget> [
-                              Icon(Icons.upload_file_outlined),
-                              Text(' Selecionar imagens'),
-                              
+                          const SizedBox(width: 12.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: TextFormField(
+                                  controller: tituloController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Nome da Sala',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: valorController,
+                                  inputFormatters: [_moneyFormatter],
+                                  decoration: InputDecoration(
+                                    labelText: 'Valor da Hora',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: capacidadeController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Capacidade',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children:
-                              _pickedImagesWeb.asMap().entries.map((entry) {
-                            int index = entry.key;
-                            Uint8List image = entry.value;
-                            return Container(
-                              width: 100,
-                              height: 100,
-                              child: Stack(
-                                alignment: Alignment.topRight,
-                                children: [
-                                  Image.memory(
-                                    image,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: double.infinity,
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.close),
-                                    onPressed: () {
-                                      setState(() {
-                                        _pickedImagesWeb.removeAt(index);
-                                        _pickedImages.removeAt(index);
+                          SizedBox(height: 12.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: cepController,
+                                  inputFormatters: [cepFormat],
+                                  onChanged: (cep) {
+                                    if (cep.length == 9) {
+                                      getAddress(cep).then((address) {
+                                        setState(() {
+                                          logradouroController.text =
+                                              address['logradouro'] ?? '';
+                                          cidadeController.text =
+                                              address['localidade'] ?? '';
+                                          ufController.text =
+                                              address['uf'] ?? '';
+                                          bairroController.text =
+                                              address['bairro'] ?? '';
+                                        });
                                       });
-                                    },
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: 'Cep',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
                                   ),
-                                ],
+                                ),
                               ),
-                            );
-                          }).toList(),
-                        )
-                      ],
-                    )),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(const Size(110, 40)),
-                  ),
-                  onPressed: () {
-                    String cep = cepController.text;
-                    String logradouro = logradouroController.text;
-                    String numero = numeroController.text;
-                    String bairro = bairroController.text;
-                    String complemento = complementoController.text;
-                    String uf = selectedUf;
-                    String cidade = cidadeController.text;
-                    String titulo = tituloController.text;
-                    String descricao = descricaoController.text;
-                    double valor = double.parse(valorController.text);
-                    int capacidade = int.parse(capacidadeController.text);
-                    bool acessibilidade = acessibilidadeController.value;
-                    bool arCondicionado = arCondicionadoController.value;
-                    bool projetor = projetorController.value;
-                    bool quadroBranco = quadroBrancoController.value;
-                    bool tv = tvController.value;
-                    DateTime dtCriacao = DateTime.now();
-                    if (cep.isNotEmpty &&
-                        logradouro.isNotEmpty &&
-                        numero.isNotEmpty &&
-                        bairro.isNotEmpty &&
-                        uf.isNotEmpty &&
-                        cidade.isNotEmpty &&
-                        titulo.isNotEmpty &&
-                        descricao.isNotEmpty &&
-                        valor.isFinite &&
-                        capacidade.isFinite) {
-                      MeetingRoomController().addMeetingRoom(
-                          cep,
-                          logradouro,
-                          numero,
-                          bairro,
-                          complemento,
-                          uf,
-                          cidade,
-                          titulo,
-                          descricao,
-                          valor,
-                          capacidade,
-                          acessibilidade,
-                          arCondicionado,
-                          projetor,
-                          quadroBranco,
-                          tv,
-                          dtCriacao,
-                          _pickedImagesWeb);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Colors.red,
-                          content:
-                              Text('Preencha todos os campos obrigatórios.'),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Adicionar'),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 4,
+                                child: TextFormField(
+                                  controller: logradouroController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Logradouro',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: numeroController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Número',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12.0),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: TextFormField(
+                                  controller: cidadeController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    labelText: 'Cidade',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 12.0,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  controller: ufController,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    labelText: 'Estado',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 2,
+                                child: TextFormField(
+                                  controller: bairroController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Bairro',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 2,
+                                child: TextFormField(
+                                  controller: complementoController,
+                                  decoration: InputDecoration(
+                                    labelText: 'Complemento',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 12.0),
+                          TextFormField(
+                            controller: descricaoController,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                              labelText: 'Descrição',
+                              isDense: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12.0),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.coffee,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Café'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: cafeController.value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    cafeController.value =
+                                                        value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 6.0),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.local_parking,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Estacionamento'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: estacionamentoController
+                                                    .value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    estacionamentoController
+                                                        .value = value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 6.0),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.severe_cold,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Ar-Condicionado'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: arCondicionadoController
+                                                    .value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    arCondicionadoController
+                                                        .value = value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 12.0),
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.interests,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Espaço interativo'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value:
+                                                    espacoInterativoController
+                                                        .value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    espacoInterativoController
+                                                        .value = value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 6.0),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.pedal_bike,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Bicicletário'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: bicicletarioController
+                                                    .value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    bicicletarioController
+                                                        .value = value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 6.0),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.wheelchair_pickup,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Acessibilidade'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: acessibilidadeController
+                                                    .value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    acessibilidadeController
+                                                        .value = value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.videogame_asset,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Projetor'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: projetorController.value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    projetorController.value =
+                                                        value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 6.0),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.developer_board,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' Quadro Branco'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: quadroBrancoController
+                                                    .value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    quadroBrancoController
+                                                        .value = value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(width: 6.0),
+                                        Flexible(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.tv,
+                                                    size: 20,
+                                                  ),
+                                                  Text(' TV'),
+                                                ],
+                                              ),
+                                              Switch(
+                                                value: tvController.value,
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    tvController.value = value;
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    children: [
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.grey),
+                                          fixedSize: MaterialStateProperty.all(
+                                              const Size(200, 40)),
+                                        ),
+                                        onPressed: () => _pickImage(),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(Icons.upload_file_outlined),
+                                            Text(' Selecionar imagens'),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Wrap(
+                                        spacing: 10,
+                                        runSpacing: 10,
+                                        children: _pickedImagesWeb
+                                            .asMap()
+                                            .entries
+                                            .map((entry) {
+                                          int index = entry.key;
+                                          Uint8List image = entry.value;
+                                          return Container(
+                                            width: 100,
+                                            height: 100,
+                                            child: Stack(
+                                              alignment: Alignment.topRight,
+                                              children: [
+                                                Image.memory(
+                                                  image,
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                ),
+                                                IconButton(
+                                                  icon: Icon(Icons.close),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _pickedImagesWeb
+                                                          .removeAt(index);
+                                                      _pickedImages
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      )
+                                    ],
+                                  )),
+                            ],
+                          ),
+                          SizedBox(height: 12.0),
+                          Center(
+                              child: SizedBox(
+                            height: 50,
+                            width: 120,
+                            child: OutlinedButton(
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                side: const BorderSide(
+                                    width: 2,
+                                    color: Color.fromRGBO(177, 47, 47, 1)),
+                              ),
+                              onPressed: () {
+                                if (tituloController.text.isNotEmpty &&
+                                    descricaoController.text.isNotEmpty &&
+                                    valorController.text.isNotEmpty &&
+                                    capacidadeController.text.isNotEmpty &&
+                                    cepController.text.isNotEmpty &&
+                                    logradouroController.text.isNotEmpty &&
+                                    numeroController.text.isNotEmpty &&
+                                    bairroController.text.isNotEmpty &&
+                                    cidadeController.text.isNotEmpty &&
+                                    ufController.text.isNotEmpty) {
+                                  var meetingRoomController =
+                                      MeetingRoomController(); // Aplicar uso de model
+                                  meetingRoomController.addMeetingRoom(
+                                    cep: cepController.text,
+                                    logradouro: logradouroController.text,
+                                    numero: numeroController.text,
+                                    bairro: bairroController.text,
+                                    complemento: complementoController.text,
+                                    uf: ufController.text,
+                                    cidade: cidadeController.text,
+                                    titulo: tituloController.text,
+                                    descricao: descricaoController.text,
+                                    valor: _moneyFormatter.getUnmaskedText(),
+                                    capacidade:
+                                        int.parse(capacidadeController.text),
+                                    acessibilidade:
+                                        acessibilidadeController.value,
+                                    arCondicionado:
+                                        arCondicionadoController.value,
+                                    projetor: projetorController.value,
+                                    quadroBranco: quadroBrancoController.value,
+                                    tv: tvController.value,
+                                    dtCriacao: DateTime.now(),
+                                    imagens: _pickedImagesWeb,
+                                  );
+                                  Navigator.of(context).pop();
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor: Colors.red,
+                                      content: Text(
+                                          'Preencha todos os campos obrigatórios.'),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: const Text(
+                                'SALVAR',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Color.fromRGBO(177, 47, 47, 1),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ))
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        color: Colors.red,
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.close),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.grey),
-                    fixedSize: MaterialStateProperty.all(const Size(100, 40)),
-                  ),
-                  onPressed: () {}, //=> pageController.jumpToPage(1),
-                  child: const Text('Voltar'),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+              );
+            },
+          )),
     );
   }
 
