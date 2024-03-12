@@ -660,27 +660,31 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                   var meetingRoomController =
                                       MeetingRoomController(); // Aplicar uso de model
                                   meetingRoomController.addMeetingRoom(
-                                    cep: cepController.text,
-                                    logradouro: logradouroController.text,
-                                    numero: numeroController.text,
-                                    bairro: bairroController.text,
-                                    complemento: complementoController.text,
-                                    uf: ufController.text,
-                                    cidade: cidadeController.text,
-                                    titulo: tituloController.text,
-                                    descricao: descricaoController.text,
-                                    valor: _moneyFormatter.getUnmaskedText(),
-                                    capacidade:
-                                        int.parse(capacidadeController.text),
-                                    acessibilidade:
-                                        acessibilidadeController.value,
-                                    arCondicionado:
-                                        arCondicionadoController.value,
-                                    projetor: projetorController.value,
-                                    quadroBranco: quadroBrancoController.value,
-                                    tv: tvController.value,
-                                    dtCriacao: DateTime.now(),
-                                    imagens: _pickedImagesWeb,
+                                    cepController.text,
+                                    logradouroController.text,
+                                    numeroController.text,
+                                    bairroController.text,
+                                    complementoController.text,
+                                    ufController.text,
+                                    cidadeController.text,
+                                    tituloController.text,
+                                    descricaoController.text,
+                                    valorController.text.isEmpty
+                                        ? 0
+                                        : double.parse(valorController.text
+                                            .replaceAll(RegExp(r'[,.]'), '')),
+                                    int.parse(capacidadeController.text),
+                                    acessibilidadeController.value,
+                                    arCondicionadoController.value,
+                                    projetorController.value,
+                                    quadroBrancoController.value,
+                                    tvController.value,
+                                    bicicletarioController.value,
+                                    espacoInterativoController.value,
+                                    estacionamentoController.value,
+                                    cafeController.value,
+                                    DateTime.now(),
+                                    _pickedImagesWeb,
                                   );
                                   Navigator.of(context).pop();
                                 } else {

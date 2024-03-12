@@ -25,6 +25,10 @@ class MeetingRoomController {
     bool projetor,
     bool quadroBranco,
     bool tv,
+    bool bicicletario,
+    bool espacoInterativo,
+    bool estacionamento,
+    bool cafe,
     DateTime dtCriacao,
     List<Uint8List> imagens,
   ) async {
@@ -68,6 +72,10 @@ class MeetingRoomController {
         'projetor': projetor,
         'quadroBranco': quadroBranco,
         'tv': tv,
+        'bicicletario': bicicletario,
+        'espacoInterativo': espacoInterativo,
+        'estacionamento': estacionamento,
+        'cafe': cafe,
         'dtCriacao': dtCriacao,
         'imagens': downloadURLs,
       });
