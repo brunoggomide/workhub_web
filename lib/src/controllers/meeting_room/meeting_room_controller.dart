@@ -33,22 +33,19 @@ class MeetingRoomController {
     List<Uint8List> imagens,
   ) async {
     var uidCoworking = AuthController().idUsuario();
-    List<String> downloadURLs = [];
+    List<String> imagePaths = [];
 
     for (Uint8List imagem in imagens) {
       var imageName = const Uuid().v1();
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref('/meeting_rooms_photos/$uidCoworking/$imageName.jpg');
-      print(imagem);
+      String imagePath = '/meeting_rooms_photos/$uidCoworking/$imageName.jpg';
+      firebase_storage.Reference ref =
+          firebase_storage.FirebaseStorage.instance.ref(imagePath);
 
       try {
         await ref.putData(imagem);
-
-        String downloadURL =
-            await ref.getDownloadURL().timeout(const Duration(seconds: 10));
-        downloadURLs.add(downloadURL);
+        imagePaths.add(imagePath);
       } catch (e) {
-        print('Erro ao carregar a imagem ou obter a URL: $e');
+        print('Erro ao carregar a imagem: $e');
         return;
       }
     }
@@ -77,7 +74,7 @@ class MeetingRoomController {
         'estacionamento': estacionamento,
         'cafe': cafe,
         'dtCriacao': dtCriacao,
-        'imagens': downloadURLs,
+        'imagens': imagePaths,
       });
       print('Sala de reunião adicionada com sucesso.');
     } catch (e) {
