@@ -35,9 +35,12 @@ class MeetingRoomController {
     var uidCoworking = AuthController().idUsuario();
     List<String> imagePaths = [];
 
+    DocumentReference meetingRoomRef = _meetingRooms.doc();
+
     for (Uint8List imagem in imagens) {
       var imageName = const Uuid().v1();
-      String imagePath = '/meeting_rooms_photos/$uidCoworking/$imageName.jpg';
+      String imagePath =
+          '/meeting_rooms_photos/$uidCoworking/${meetingRoomRef.id}/$imageName.jpg';
       firebase_storage.Reference ref =
           firebase_storage.FirebaseStorage.instance.ref(imagePath);
 
@@ -51,7 +54,7 @@ class MeetingRoomController {
     }
 
     try {
-      await _meetingRooms.add({
+      await meetingRoomRef.set({
         'cep': cep,
         'logradouro': logradouro,
         'numero': numero,
