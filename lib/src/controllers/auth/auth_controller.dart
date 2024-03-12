@@ -10,7 +10,7 @@ import '../../views/utils/env.dart';
 class AuthController {
   criarConta(context, nome, email, senha, documento, contato, plano, planoDesk,
       planoMeet) {
-    print('aqui');
+    //print('aqui');
     FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: senha)
         .then((res) {
@@ -119,4 +119,6 @@ class AuthController {
   idUsuario() {
     return FirebaseAuth.instance.currentUser!.uid;
   }
+
+  getLoggedUserUid() {}
 }
