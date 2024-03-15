@@ -8,6 +8,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
 import '../../../../services/cep.dart';
 import '../../../desks/components/moneyFormat.dart';
+import '../../../utils/timeFormat.dart';
 
 class AddMeetingRoomForm extends StatefulWidget {
   const AddMeetingRoomForm({super.key});
@@ -26,10 +27,13 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   final TextEditingController cidadeController = TextEditingController();
   final TextEditingController ufController = TextEditingController();
   final TextEditingController tituloController = TextEditingController();
+  final TextEditingController aberturaController = TextEditingController();
+  final TextEditingController fechamentoController = TextEditingController();
   final TextEditingController descricaoController = TextEditingController();
   final TextEditingController valorController = TextEditingController();
   final TextEditingController capacidadeController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
+  final HourTextInputFormatter _hourFormatter = HourTextInputFormatter();
 
   final ValueNotifier<bool> acessibilidadeController =
       ValueNotifier<bool>(false);
@@ -120,6 +124,36 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                   controller: tituloController,
                                   decoration: InputDecoration(
                                     labelText: 'Nome da Sala',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: aberturaController,
+                                  inputFormatters: [_hourFormatter],
+                                  decoration: InputDecoration(
+                                    labelText: 'Abertura',
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(2),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12.0),
+                              Expanded(
+                                flex: 1,
+                                child: TextFormField(
+                                  controller: fechamentoController,
+                                  inputFormatters: [_hourFormatter],
+                                  decoration: InputDecoration(
+                                    labelText: 'Fechamento',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(2),
