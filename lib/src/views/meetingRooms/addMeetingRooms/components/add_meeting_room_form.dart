@@ -682,6 +682,8 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                               ),
                               onPressed: () {
                                 if (tituloController.text.isNotEmpty &&
+                                    aberturaController.text.isNotEmpty &&
+                                    fechamentoController.text.isNotEmpty &&
                                     descricaoController.text.isNotEmpty &&
                                     valorController.text.isNotEmpty &&
                                     capacidadeController.text.isNotEmpty &&
@@ -702,6 +704,8 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     ufController.text,
                                     cidadeController.text,
                                     tituloController.text,
+                                    aberturaController.text,
+                                    fechamentoController.text,
                                     descricaoController.text,
                                     valorController.text.isEmpty
                                         ? 0
