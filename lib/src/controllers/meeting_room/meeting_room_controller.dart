@@ -88,4 +88,8 @@ class MeetingRoomController {
       print('Erro ao adicionar os dados da sala de reunião ao Firestore: $e');
     }
   }
+
+  Stream<QuerySnapshot> getMeetingRooms() {
+    return _meetingRooms.snapshots();
+  }
 }

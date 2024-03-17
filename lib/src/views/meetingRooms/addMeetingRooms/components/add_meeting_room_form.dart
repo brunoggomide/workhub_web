@@ -724,7 +724,16 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     DateTime.now(),
                                     _pickedImagesWeb,
                                   );
+
                                   Navigator.of(context).pop();
+
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      backgroundColor: Colors.green,
+                                      content:
+                                          Text('Sala cadastrada com sucesso!'),
+                                    ),
+                                  );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

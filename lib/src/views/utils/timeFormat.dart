@@ -11,7 +11,6 @@ class HourTextInputFormatter extends TextInputFormatter {
       );
     }
 
-    // Filtering for hour format (HH:MM)
     String newString = newValue.text;
     if (newString.length == 2 && oldValue.text.length == 1) {
       newString += ':';

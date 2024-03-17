@@ -91,7 +91,7 @@ class _BaseScreenState extends State<BaseScreen> {
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
                       ReservationsPage(pageController: pageController),
-                      MeetingRoomsPage(pageController: pageController),
+                      MeetingRoomsPage(),
                       Desks(),
                       Container(color: Colors.blue),
                       ReservationsCalendarPage(pageController: pageController),

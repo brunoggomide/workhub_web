@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
+import '../../controllers/meeting_room/meeting_room_controller.dart';
 import 'addMeetingRooms/components/add_meeting_room_form.dart';
 
 class MeetingRoomsPage extends StatelessWidget {
-  final PageController pageController;
+  final MeetingRoomController meetingRoomController = MeetingRoomController();
 
-  const MeetingRoomsPage({Key? key, required this.pageController})
-      : super(key: key);
+  MeetingRoomsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,110 +41,53 @@ class MeetingRoomsPage extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            children: [
-              Expanded(
-                  child: SingleChildScrollView(
+          StreamBuilder<QuerySnapshot>(
+            stream: meetingRoomController.getMeetingRooms(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Algo deu errado');
+              }
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Carregando informações");
+              }
+
+              return SingleChildScrollView(
                 scrollDirection: Axis.vertical,
                 child: DataTable(
                   columns: const <DataColumn>[
                     DataColumn(
-                      label: Text(
-                        'Título da Sala',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      ),
+                      label: Text('Título da sala'),
                     ),
                     DataColumn(
-                      label: Text(
-                        'Recursos da Sala',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      ),
+                      label: Text('Valor da hora'),
                     ),
                     DataColumn(
-                      label: Text(
-                        'Valor da Hora',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      ),
+                      label: Text('Endereço'),
                     ),
                     DataColumn(
-                      label: Text(
-                        'Editar',
-                        style: TextStyle(fontStyle: FontStyle.italic),
-                      ),
+                      label: Text('Capacidade'),
                     ),
                   ],
-                  rows: [
-                    DataRow(
+                  rows: snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Map<String, dynamic> data =
+                        document.data() as Map<String, dynamic>;
+                    return DataRow(
                       cells: <DataCell>[
-                        DataCell(Text('Sala 1')),
-                        DataCell(Text('Projetor, TV, Ar Condicionado')),
-                        DataCell(Text('R\$ 50,00')),
-                        DataCell(
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
+                        DataCell(Text(data['titulo'] ?? '')),
+                        DataCell(Text(
+                            NumberFormat.currency(locale: 'pt_BR', symbol: '')
+                                .format((data['valor'] ?? 0) / 100.0))),
+                        DataCell(Text(data['logradouro'] ?? '')),
+                        DataCell(Text((data['capacidade'] ?? '').toString())),
                       ],
-                    ),
-                    DataRow(
-                      cells: <DataCell>[
-                        DataCell(Text('Sala 2')),
-                        DataCell(Text('Projetor, TV, Ar Condicionado')),
-                        DataCell(Text('R\$ 50,00')),
-                        DataCell(
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    DataRow(
-                      cells: <DataCell>[
-                        DataCell(Text('Sala 3')),
-                        DataCell(Text('Projetor, TV, Ar Condicionado')),
-                        DataCell(Text('R\$ 50,00')),
-                        DataCell(
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              IconButton(
-                                icon: Icon(Icons.edit),
-                                onPressed: () {},
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.delete),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                    );
+                  }).toList(),
                 ),
-              ))
-            ],
-          )
+              );
+            },
+          ),
         ],
       ),
     );
