@@ -40,15 +40,22 @@ class MeetingRoomController {
     DocumentReference meetingRoomRef = _meetingRooms.doc();
 
     for (Uint8List imagem in imagens) {
-      var imageName = const Uuid().v1();
-      String imagePath =
+      // Gera um UUID único para cada imagem
+      final imageName = Uuid().v1();
+
+      final imagePath =
           '/meeting_rooms_photos/$uidCoworking/${meetingRoomRef.id}/$imageName.jpg';
-      firebase_storage.Reference ref =
-          firebase_storage.FirebaseStorage.instance.ref(imagePath);
+
+      final ref =
+          firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
 
       try {
-        await ref.putData(imagem);
-        imagePaths.add(imagePath);
+        await ref.putData(imagem,
+            firebase_storage.SettableMetadata(contentType: 'image/jpeg'));
+
+        final downloadUrl = await ref.getDownloadURL();
+
+        imagePaths.add(downloadUrl);
       } catch (e) {
         print('Erro ao carregar a imagem: $e');
         return;
