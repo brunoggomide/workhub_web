@@ -44,15 +44,14 @@ class MeetingRoomsPage extends StatelessWidget {
                   ),
                 ),
               ),
-              
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
                     StreamBuilder<QuerySnapshot>(
                       stream: meetingRoomController.getMeetingRooms(),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
                           return Text(
                             'Algo deu errado',
@@ -64,7 +63,8 @@ class MeetingRoomsPage extends StatelessWidget {
                           );
                         }
 
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Text(
                             "Carregando informações",
                             style: TextStyle(
@@ -74,13 +74,12 @@ class MeetingRoomsPage extends StatelessWidget {
                             ),
                           );
                         }
-                            
+
                         return Expanded(
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             child: DataTable(
                               decoration: BoxDecoration(
-                                
                                 borderRadius: BorderRadius.circular(10.0),
                                 color: const Color.fromARGB(255, 243, 246, 248),
                                 boxShadow: const [
@@ -92,7 +91,7 @@ class MeetingRoomsPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              columns: const <DataColumn>[
+                              columns: <DataColumn>[
                                 DataColumn(
                                   label: Text('Título da sala'),
                                 ),
@@ -105,21 +104,56 @@ class MeetingRoomsPage extends StatelessWidget {
                                 DataColumn(
                                   label: Text('Capacidade'),
                                 ),
+                                DataColumn(
+                                  label: Container(
+                                    width:
+                                        0.2, // Defina a largura que você deseja
+                                    child: Text(''),
+                                  ),
+                                )
                               ],
-                              rows: snapshot.data!.docs.map((DocumentSnapshot document) {
+                              rows: snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
                                 Map<String, dynamic> data =
                                     document.data() as Map<String, dynamic>;
                                 return DataRow(
-                                    cells: <DataCell>[
-                                      DataCell(Text(data['titulo'] ?? '')),
-                                      DataCell(Text(
-                                          NumberFormat.currency(locale: 'pt_BR', symbol: '')
-                                              .format((data['valor'] ?? 0) / 100.0))),
-                                      DataCell(Text(data['logradouro'] ?? '')),
-                                      DataCell(Text((data['capacidade'] ?? '').toString())),
-                                    ],
-                                      color: snapshot.data!.docs.indexOf(document as QueryDocumentSnapshot<Object?>).isEven ? MaterialStateProperty.all(Colors.grey.shade100) : null,
-                                  );
+                                  cells: <DataCell>[
+                                    DataCell(Text(data['titulo'] ?? '')),
+                                    DataCell(Text(NumberFormat.currency(
+                                            locale: 'pt_BR', symbol: '')
+                                        .format(
+                                            (num.tryParse(data['valor']) ?? 0) /
+                                                100.0))),
+                                    DataCell(Text(data['logradouro'] ?? '')),
+                                    DataCell(Text(
+                                        (data['capacidade'] ?? '').toString())),
+                                    DataCell(
+                                      Container(
+                                        width:
+                                            100, // Defina a largura que você deseja
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.edit),
+                                              onPressed: () {},
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.delete),
+                                              onPressed: () {},
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                  color: snapshot.data!.docs
+                                          .indexOf(document
+                                              as QueryDocumentSnapshot<Object?>)
+                                          .isEven
+                                      ? MaterialStateProperty.all(
+                                          Colors.grey.shade100)
+                                      : null,
+                                );
                               }).toList(),
                             ),
                           ),

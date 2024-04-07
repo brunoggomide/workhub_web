@@ -42,11 +42,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   final ValueNotifier<bool> projetorController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> quadroBrancoController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> tvController = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> cafeController = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> estacionamentoController =
-      ValueNotifier<bool>(false);
-  final ValueNotifier<bool> bicicletarioController = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> espacoInterativoController =
+  final ValueNotifier<bool> videoconferenciaController =
       ValueNotifier<bool>(false);
 
   final cepFormat = MaskTextInputFormatter(
@@ -348,62 +344,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                               Row(
                                                 children: [
                                                   Icon(
-                                                    Icons.coffee,
-                                                    size: 20,
-                                                  ),
-                                                  Text(' Café'),
-                                                ],
-                                              ),
-                                              Switch(
-                                                value: cafeController.value,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    cafeController.value =
-                                                        value;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: 6.0),
-                                        Flexible(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.local_parking,
-                                                    size: 20,
-                                                  ),
-                                                  Text(' Estacionamento'),
-                                                ],
-                                              ),
-                                              Switch(
-                                                value: estacionamentoController
-                                                    .value,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    estacionamentoController
-                                                        .value = value;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: 6.0),
-                                        Flexible(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.severe_cold,
+                                                    Icons.ac_unit,
                                                     size: 20,
                                                   ),
                                                   Text(' Ar-Condicionado'),
@@ -422,39 +363,6 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 12.0),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.interests,
-                                                    size: 20,
-                                                  ),
-                                                  Text(' Espaço interativo'),
-                                                ],
-                                              ),
-                                              Switch(
-                                                value:
-                                                    espacoInterativoController
-                                                        .value,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    espacoInterativoController
-                                                        .value = value;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
                                         SizedBox(width: 6.0),
                                         Flexible(
                                           child: Column(
@@ -464,18 +372,19 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                               Row(
                                                 children: [
                                                   Icon(
-                                                    Icons.pedal_bike,
+                                                    Icons.video_call,
                                                     size: 20,
                                                   ),
-                                                  Text(' Bicicletário'),
+                                                  Text(' Vídeoconferência'),
                                                 ],
                                               ),
                                               Switch(
-                                                value: bicicletarioController
-                                                    .value,
+                                                value:
+                                                    videoconferenciaController
+                                                        .value,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    bicicletarioController
+                                                    videoconferenciaController
                                                         .value = value;
                                                   });
                                                 },
@@ -707,20 +616,14 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     aberturaController.text,
                                     fechamentoController.text,
                                     descricaoController.text,
-                                    valorController.text.isEmpty
-                                        ? 0
-                                        : double.parse(valorController.text
-                                            .replaceAll(RegExp(r'[,.]'), '')),
+                                    valorController.text,
                                     int.parse(capacidadeController.text),
                                     acessibilidadeController.value,
                                     arCondicionadoController.value,
                                     projetorController.value,
                                     quadroBrancoController.value,
                                     tvController.value,
-                                    bicicletarioController.value,
-                                    espacoInterativoController.value,
-                                    estacionamentoController.value,
-                                    cafeController.value,
+                                    videoconferenciaController.value,
                                     DateTime.now(),
                                     _pickedImagesWeb,
                                   );
