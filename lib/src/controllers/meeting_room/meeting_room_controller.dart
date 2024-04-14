@@ -41,7 +41,7 @@ class MeetingRoomController {
       final imageName = Uuid().v1();
 
       final imagePath =
-          '/meeting_rooms_photos/$uidCoworking/${meetingRoomRef.id}/$imageName.jpg';
+          '/meeting_rooms_images/$uidCoworking/${meetingRoomRef.id}/$imageName.jpg';
 
       final ref =
           firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
@@ -79,8 +79,7 @@ class MeetingRoomController {
         'projetor': projetor,
         'ar_condicionado': arCondicionado,
         'tv': tv,
-        'videoconferencia':
-            videoconferencia, // alterar no codigo de bicicletario para video conferencia
+        'videoconferencia': videoconferencia,
         'acessibilidade': acessibilidade,
         // crair campo status e avisar bruno para atualizar diagraam de classe
         'criado_em': dtCriacao,

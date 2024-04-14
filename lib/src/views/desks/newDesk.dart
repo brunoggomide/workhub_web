@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:workhub_web/src/controllers/desks/desk_controller.dart';
 import 'package:workhub_web/src/models/desk_model.dart';
@@ -34,6 +38,8 @@ class _NewDeskState extends State<NewDesk> {
   bool espacoInterativo = false;
   bool bicicletario = false;
   bool acessibilidade = false;
+  final List<File> _pickedImages = [];
+  final List<Uint8List> _pickedImagesWeb = [];
   final cepFormat = MaskTextInputFormatter(
     mask: '#####-###',
     filter: {
@@ -266,163 +272,241 @@ class _NewDeskState extends State<NewDesk> {
                         ),
                         SizedBox(height: 12.0),
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Flexible(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
-                                      Icon(
-                                        Icons.coffee,
-                                        size: 20,
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.wheelchair_pickup,
+                                                  size: 20,
+                                                ),
+                                                Text('Acessibilidade'),
+                                              ],
+                                            ),
+                                            Switch(
+                                              value: acessibilidade,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  acessibilidade = value;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Text('Café'),
+                                      SizedBox(width: 6.0),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.pedal_bike,
+                                                  size: 20,
+                                                ),
+                                                Text('Bicicletário'),
+                                              ],
+                                            ),
+                                            Switch(
+                                              value: bicicletario,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  bicicletario = value;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 6.0),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.interests,
+                                                  size: 20,
+                                                ),
+                                                Text('Espaço interativo'),
+                                              ],
+                                            ),
+                                            Switch(
+                                              value: espacoInterativo,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  espacoInterativo = value;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                  Switch(
-                                    value: cafe,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        cafe = value;
-                                        // Adicione ação desejada aqui
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 6.0),
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
                                   Row(
                                     children: [
-                                      Icon(
-                                        Icons.local_parking,
-                                        size: 20,
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.severe_cold,
+                                                  size: 20,
+                                                ),
+                                                Text('Ar-Condicionado'),
+                                              ],
+                                            ),
+                                            Switch(
+                                              value: arCondicionado,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  arCondicionado = value;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Text('Estacionamento'),
+                                      SizedBox(width: 6.0),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.local_parking,
+                                                  size: 20,
+                                                ),
+                                                Text('Estacionamento'),
+                                              ],
+                                            ),
+                                            Switch(
+                                              value: estacionamento,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  estacionamento = value;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 6.0),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Icons.coffee,
+                                                  size: 20,
+                                                ),
+                                                Text('Café'),
+                                              ],
+                                            ),
+                                            Switch(
+                                              value: cafe,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  cafe = value;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
-                                  ),
-                                  Switch(
-                                    value: estacionamento,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        estacionamento = value;
-                                        // Adicione ação desejada aqui
-                                      });
-                                    },
                                   ),
                                 ],
                               ),
                             ),
-                            SizedBox(width: 6.0),
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.severe_cold,
-                                        size: 20,
+                            Expanded(
+                                flex: 1,
+                                child: Column(
+                                  children: [
+                                    ElevatedButton(
+                                      style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Colors.grey),
+                                        fixedSize: MaterialStateProperty.all(
+                                            const Size(200, 40)),
                                       ),
-                                      Text('Ar-Condicionado'),
-                                    ],
-                                  ),
-                                  Switch(
-                                    value: arCondicionado,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        arCondicionado = value;
-                                        // Adicione ação desejada aqui
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12.0),
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.interests,
-                                        size: 20,
+                                      onPressed: () => _pickImage(),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(Icons.upload_file_outlined),
+                                          Text(' Selecionar imagens'),
+                                        ],
                                       ),
-                                      Text('Espaço interativo'),
-                                    ],
-                                  ),
-                                  Switch(
-                                    value: espacoInterativo,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        espacoInterativo = value;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 6.0),
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.pedal_bike,
-                                        size: 20,
-                                      ),
-                                      Text('Bicicletário'),
-                                    ],
-                                  ),
-                                  Switch(
-                                    value: bicicletario,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        bicicletario = value;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 6.0),
-                            Flexible(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.wheelchair_pickup,
-                                        size: 20,
-                                      ),
-                                      Text('Acessibilidade'),
-                                    ],
-                                  ),
-                                  Switch(
-                                    value: acessibilidade,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        acessibilidade = value;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Wrap(
+                                      spacing: 10,
+                                      runSpacing: 10,
+                                      children: _pickedImagesWeb
+                                          .asMap()
+                                          .entries
+                                          .map((entry) {
+                                        int index = entry.key;
+                                        Uint8List image = entry.value;
+                                        return Container(
+                                          width: 100,
+                                          height: 100,
+                                          child: Stack(
+                                            alignment: Alignment.topRight,
+                                            children: [
+                                              Image.memory(
+                                                image,
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              ),
+                                              IconButton(
+                                                icon: Icon(Icons.close),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _pickedImagesWeb
+                                                        .removeAt(index);
+                                                    _pickedImages
+                                                        .removeAt(index);
+                                                  });
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    )
+                                  ],
+                                )),
                           ],
                         ),
                         SizedBox(height: 12.0),
@@ -449,29 +533,31 @@ class _NewDeskState extends State<NewDesk> {
                                     _cidadeController.text.isNotEmpty &&
                                     _estadoController.text.isNotEmpty &&
                                     _bairroController.text.isNotEmpty &&
-                                    _description.text.isNotEmpty) {
+                                    _description.text.isNotEmpty &&
+                                    _pickedImagesWeb.isNotEmpty) {
                                   var d = Desk(
-                                    AuthController().idUsuario(),
-                                    _titleName.text,
-                                    _valueHour.text,
-                                    _numTables.text,
-                                    _cepController.text,
-                                    _enderecoController.text,
-                                    _numAddress.text,
-                                    _cidadeController.text,
-                                    _estadoController.text,
-                                    _bairroController.text,
-                                    _complementoAddress.text,
-                                    _description.text,
-                                    cafe,
-                                    estacionamento,
-                                    arCondicionado,
-                                    espacoInterativo,
-                                    bicicletario,
-                                    acessibilidade,
-                                    '00',
-                                    '',
-                                    true,
+                                    uid: AuthController().idUsuario(),
+                                    title: _titleName.text,
+                                    value_hour: _valueHour.text,
+                                    num_tables: _numTables.text,
+                                    cep: _cepController.text,
+                                    address: _enderecoController.text,
+                                    num_address: _numAddress.text,
+                                    city: _cidadeController.text,
+                                    uf: _estadoController.text,
+                                    bairro: _bairroController.text,
+                                    complemento: _complementoAddress.text,
+                                    description: _description.text,
+                                    imageFiles: _pickedImagesWeb,
+                                    coffe: cafe,
+                                    park: estacionamento,
+                                    air: arCondicionado,
+                                    space: espacoInterativo,
+                                    bike: bicicletario,
+                                    accessibility: acessibilidade,
+                                    criado_em: DateTime.now().toString(),
+                                    atualizado_em: DateTime.now().toString(),
+                                    status: true,
                                   );
                                   DeskController().adicionar(context, d);
                                 } else {
@@ -519,5 +605,43 @@ class _NewDeskState extends State<NewDesk> {
         ),
       ),
     );
+  }
+
+  Future<void> _pickImage() async {
+    if (!kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      List<XFile>? images = await _picker.pickMultiImage();
+      if (images != null) {
+        var selected = images.map((image) => File(image.path)).toList();
+        setState(() {
+          _pickedImages.addAll(selected);
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Nenhuma imagem selecionada.'),
+          ),
+        );
+      }
+    } else {
+      final ImagePicker _picker = ImagePicker();
+      List<XFile>? images = await _picker.pickMultiImage();
+      if (images != null) {
+        var files =
+            await Future.wait(images.map((image) => image.readAsBytes()));
+        setState(() {
+          _pickedImagesWeb.addAll(files);
+          _pickedImages.addAll(images.map((image) => File('a')).toList());
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Nenhuma imagem selecionada.'),
+          ),
+        );
+      }
+    }
   }
 }

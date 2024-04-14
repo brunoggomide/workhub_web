@@ -1,10 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:uuid/uuid.dart';
 import '../../models/desk_model.dart';
 import '../../views/utils/env.dart';
+import '../auth/auth_controller.dart';
 
 class DeskController {
-  adicionar(context, Desk ex) {
+  adicionar(context, Desk ex) async {
+    List<String> imageUrls = [];
+
+    var uidCoworking = AuthController().idUsuario();
+
+    DocumentReference deskRef =
+        FirebaseFirestore.instance.collection('mesas').doc();
+
+    for (Uint8List imagem in ex.imageFiles) {
+      // Gera um UUID único para cada imagem
+      final imageName = Uuid().v1();
+
+      final imagePath =
+          '/desks_images/$uidCoworking/${deskRef.id}/$imageName.jpg';
+
+      final ref =
+          firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
+
+      try {
+        await ref.putData(imagem,
+            firebase_storage.SettableMetadata(contentType: 'image/jpeg'));
+
+        final downloadUrl = await ref.getDownloadURL();
+
+        imageUrls.add(downloadUrl);
+      } catch (e) {
+        print('Erro ao carregar a imagem: $e');
+        return;
+      }
+    }
+
+    ex.imageUrls = imageUrls;
+
     FirebaseFirestore.instance
         .collection('mesas')
         .add(ex.toJson())
