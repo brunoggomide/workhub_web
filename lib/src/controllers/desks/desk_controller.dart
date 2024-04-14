@@ -39,7 +39,7 @@ class DeskController {
       }
     }
 
-    ex.imageUrls = imageUrls;
+    ex.fotos = imageUrls;
 
     FirebaseFirestore.instance
         .collection('mesas')
@@ -60,6 +60,11 @@ class DeskController {
   }
 
   listar() {
-    return FirebaseFirestore.instance.collection('mesas');
+    return FirebaseFirestore.instance
+        .collection('mesas')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Desk.fromJson(doc.data())).toList();
+    });
   }
 }

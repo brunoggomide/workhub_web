@@ -28,10 +28,10 @@ class MeetingRoomsPage extends StatelessWidget {
                           barrierDismissible: false,
                           context: context,
                           builder: (_) {
-                            return AddMeetingRoomForm();
+                            return const AddMeetingRoomForm();
                           });
                     },
-                    fillColor: Color.fromARGB(255, 232, 236, 239),
+                    fillColor: const Color.fromARGB(255, 232, 236, 239),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -53,24 +53,24 @@ class MeetingRoomsPage extends StatelessWidget {
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
-                          return Text(
+                          return const Text(
                             'Algo deu errado',
                             style: TextStyle(
-                              color: Colors.red, // cor do texto
-                              fontSize: 20.0, // tamanho da fonte
-                              fontWeight: FontWeight.bold, // espessura da fonte
+                              color: Colors.red,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           );
                         }
 
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Text(
+                          return const Text(
                             "Carregando informações",
                             style: TextStyle(
-                              color: Colors.blue, // cor do texto
-                              fontSize: 20.0, // tamanho da fonte
-                              fontWeight: FontWeight.bold, // espessura da fonte
+                              color: Colors.blue,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           );
                         }
@@ -92,23 +92,45 @@ class MeetingRoomsPage extends StatelessWidget {
                                 ],
                               ),
                               columns: <DataColumn>[
-                                DataColumn(
-                                  label: Text('Título da sala'),
+                                const DataColumn(
+                                  label: Text(
+                                    'Título da sala',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
                                 ),
-                                DataColumn(
-                                  label: Text('Valor da hora'),
+                                const DataColumn(
+                                  label: Text(
+                                    'Valor da hora',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
                                 ),
-                                DataColumn(
-                                  label: Text('Endereço'),
+                                const DataColumn(
+                                  label: Text(
+                                    'Endereço',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
                                 ),
-                                DataColumn(
-                                  label: Text('Capacidade'),
+                                const DataColumn(
+                                  label: Text(
+                                    'Abertura',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
+                                ),
+                                const DataColumn(
+                                  label: Text(
+                                    'Fechamento',
+                                    style:
+                                        TextStyle(fontStyle: FontStyle.italic),
+                                  ),
                                 ),
                                 DataColumn(
                                   label: Container(
-                                    width:
-                                        0.2, // Defina a largura que você deseja
-                                    child: Text(''),
+                                    width: 0.2,
+                                    child: const Text(''),
                                   ),
                                 )
                               ],
@@ -119,18 +141,16 @@ class MeetingRoomsPage extends StatelessWidget {
                                 return DataRow(
                                   cells: <DataCell>[
                                     DataCell(Text(data['titulo'] ?? '')),
-                                    DataCell(Text(NumberFormat.currency(
-                                            locale: 'pt_BR', symbol: '')
-                                        .format(
-                                            (num.tryParse(data['valor']) ?? 0) /
-                                                100.0))),
-                                    DataCell(Text(data['logradouro'] ?? '')),
-                                    DataCell(Text(
-                                        (data['capacidade'] ?? '').toString())),
+                                    DataCell(Text("R\$${data['valor']}")),
+                                    DataCell(Text(data['endereco'] ?? '')),
+                                    /*DataCell(Text(
+                                        (data['capacidade']?.toString() ??
+                                            ''))),*/
+                                    DataCell(Text(data['hr_abertura'] ?? '')),
+                                    DataCell(Text(data['hr_fechamento'] ?? '')),
                                     DataCell(
                                       Container(
-                                        width:
-                                            100, // Defina a largura que você deseja
+                                        width: 100,
                                         child: Row(
                                           children: [
                                             IconButton(

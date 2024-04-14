@@ -4,76 +4,76 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class Desk {
-  final String uid;
-  final String title;
-  final String value_hour;
-  final String num_tables;
+  final String UID_coworking;
+  final String titulo;
+  final String valor;
+  final String num_mesas;
   final String cep;
-  final String address;
-  final String num_address;
-  final String city;
+  final String endereco;
+  final String num_endereco;
+  final String cidade;
   final String uf;
   final String bairro;
   final String complemento;
-  final String description;
+  final String descricao;
   final List<Uint8List> imageFiles;
-  List<String> imageUrls;
-  final bool coffe;
-  final bool park;
-  final bool air;
-  final bool space;
-  final bool bike;
-  final bool accessibility;
+  List<String> fotos;
+  final bool cafe;
+  final bool estacionamento;
+  final bool ar_condicionado;
+  final bool espaco_interativo;
+  final bool bicicletario;
+  final bool acessibilidade;
   final String criado_em;
   final String atualizado_em;
   final bool status;
 
   Desk(
-      {required this.uid,
-      required this.title,
-      required this.value_hour,
-      required this.num_tables,
+      {required this.UID_coworking,
+      required this.titulo,
+      required this.valor,
+      required this.num_mesas,
       required this.cep,
-      required this.address,
-      required this.num_address,
-      required this.city,
+      required this.endereco,
+      required this.num_endereco,
+      required this.cidade,
       required this.uf,
       required this.bairro,
       required this.complemento,
-      required this.description,
+      required this.descricao,
       required this.imageFiles,
-      this.imageUrls = const [],
-      required this.coffe,
-      required this.park,
-      required this.air,
-      required this.space,
-      required this.bike,
-      required this.accessibility,
+      this.fotos = const [],
+      required this.cafe,
+      required this.estacionamento,
+      required this.ar_condicionado,
+      required this.espaco_interativo,
+      required this.bicicletario,
+      required this.acessibilidade,
       required this.criado_em,
       required this.atualizado_em,
       required this.status});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {
-      'UID_coworking': uid,
-      'titulo': title,
-      'valor': value_hour,
-      'num_mesas': num_tables,
+      'UID_coworking': UID_coworking,
+      'titulo': titulo,
+      'valor': valor,
+      'num_mesas': num_mesas,
       'cep': cep,
-      'address': address,
-      'num_endereco': num_address,
-      'cidade': city,
+      'endereco': endereco,
+      'num_endereco': num_endereco,
+      'cidade': cidade,
       'uf': uf,
       'bairro': bairro,
       'complemento': complemento,
-      'descricao': description,
-      'fotos': imageUrls,
-      'cafe': coffe,
-      'estacionamento': park,
-      'ar_condicionado': air,
-      'espaco_interativo': space,
-      'bicicletario': bike,
-      'acessibilidade': accessibility,
+      'descricao': descricao,
+      'fotos': fotos,
+      'cafe': cafe,
+      'estacionamento': estacionamento,
+      'ar_condicionado': ar_condicionado,
+      'espaco_interativo': espaco_interativo,
+      'bicicletario': bicicletario,
+      'acessibilidade': acessibilidade,
       'atualizado_em': FieldValue.serverTimestamp(),
       'status': status,
     };
@@ -87,29 +87,33 @@ class Desk {
 
   factory Desk.fromJson(Map<String, dynamic> json) {
     return Desk(
-      uid: json['UID_coworking'],
-      title: json['titulo'],
-      value_hour: json['valor'],
-      num_tables: json['num_mesas'],
-      cep: json['cep'],
-      address: json['address'],
-      num_address: json['num_endereco'],
-      city: json['cidade'],
-      uf: json['uf'],
-      bairro: json['bairro'],
-      complemento: json['complemento'],
-      description: json['descricao'],
+      UID_coworking: json['UID_coworking'] ?? '',
+      titulo: json['titulo'] ?? '',
+      valor: json['valor'] ?? '',
+      num_mesas: json['num_mesas'] ?? '',
+      cep: json['cep'] ?? '',
+      endereco: json['endereco'] ?? '',
+      num_endereco: json['num_endereco'] ?? '',
+      cidade: json['cidade'] ?? '',
+      uf: json['uf'] ?? '',
+      bairro: json['bairro'] ?? '',
+      complemento: json['complemento'] ?? '',
+      descricao: json['descricao'] ?? '',
       imageFiles: [], // Inicialize imageFiles como uma lista vazia
-      imageUrls: List<String>.from(json['fotos'] ?? []),
-      coffe: json['cafe'],
-      park: json['estacionamento'],
-      air: json['ar_condicionado'],
-      space: json['espaco_interativo'],
-      bike: json['bicicletario'],
-      accessibility: json['acessibilidade'],
-      status: json['status'],
-      criado_em: json['criado_em'],
-      atualizado_em: json['atualizado_em'],
+      fotos: List<String>.from(json['fotos'] ?? []),
+      cafe: json['cafe'] ?? false,
+      estacionamento: json['estacionamento'] ?? false,
+      ar_condicionado: json['ar_condicionado'] ?? false,
+      espaco_interativo: json['espaco_interativo'] ?? false,
+      bicicletario: json['bicicletario'] ?? false,
+      acessibilidade: json['acessibilidade'] ?? false,
+      status: json['status'] ?? false,
+      criado_em: json['criado_em'] is Timestamp
+          ? (json['criado_em'] as Timestamp).toDate().toString()
+          : json['criado_em'] ?? '',
+      atualizado_em: json['atualizado_em'] is Timestamp
+          ? (json['atualizado_em'] as Timestamp).toDate().toString()
+          : json['atualizado_em'] ?? '',
     );
   }
 }

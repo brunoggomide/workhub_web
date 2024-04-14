@@ -9,6 +9,7 @@ import 'package:workhub_web/src/models/desk_model.dart';
 
 import '../../controllers/auth/auth_controller.dart';
 import '../../services/cep.dart';
+import '../utils/timeFormat.dart';
 import 'components/moneyFormat.dart';
 
 class NewDesk extends StatefulWidget {
@@ -31,7 +32,10 @@ class _NewDeskState extends State<NewDesk> {
   final _bairroController = TextEditingController();
   final _complementoAddress = TextEditingController();
   final _description = TextEditingController();
+  final _aberturaController = TextEditingController();
+  final _fechamentoController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
+  final HourTextInputFormatter _hourFormatter = HourTextInputFormatter();
   bool cafe = false;
   bool estacionamento = false;
   bool arCondicionado = false;
@@ -101,7 +105,37 @@ class _NewDeskState extends State<NewDesk> {
                                 ),
                               ),
                             ),
-                            SizedBox(width: 12.0),
+                            const SizedBox(width: 12.0),
+                            Expanded(
+                              flex: 1,
+                              child: TextFormField(
+                                controller: _aberturaController,
+                                inputFormatters: [_hourFormatter],
+                                decoration: InputDecoration(
+                                  labelText: 'Abertura',
+                                  isDense: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12.0),
+                            Expanded(
+                              flex: 1,
+                              child: TextFormField(
+                                controller: _fechamentoController,
+                                inputFormatters: [_hourFormatter],
+                                decoration: InputDecoration(
+                                  labelText: 'Fechamento',
+                                  isDense: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12.0),
                             Expanded(
                               child: TextFormField(
                                 controller: _valueHour,
@@ -536,28 +570,29 @@ class _NewDeskState extends State<NewDesk> {
                                     _description.text.isNotEmpty &&
                                     _pickedImagesWeb.isNotEmpty) {
                                   var d = Desk(
-                                    uid: AuthController().idUsuario(),
-                                    title: _titleName.text,
-                                    value_hour: _valueHour.text,
-                                    num_tables: _numTables.text,
+                                    UID_coworking: AuthController().idUsuario(),
+                                    titulo: _titleName.text,
+                                    valor: _valueHour.text,
+                                    num_mesas: _numTables.text,
                                     cep: _cepController.text,
-                                    address: _enderecoController.text,
-                                    num_address: _numAddress.text,
-                                    city: _cidadeController.text,
+                                    endereco: _enderecoController.text,
+                                    num_endereco: _numAddress.text,
+                                    cidade: _cidadeController.text,
                                     uf: _estadoController.text,
                                     bairro: _bairroController.text,
                                     complemento: _complementoAddress.text,
-                                    description: _description.text,
+                                    descricao: _description.text,
                                     imageFiles: _pickedImagesWeb,
-                                    coffe: cafe,
-                                    park: estacionamento,
-                                    air: arCondicionado,
-                                    space: espacoInterativo,
-                                    bike: bicicletario,
-                                    accessibility: acessibilidade,
+                                    cafe: cafe,
+                                    estacionamento: estacionamento,
+                                    ar_condicionado: arCondicionado,
+                                    espaco_interativo: espacoInterativo,
+                                    bicicletario: bicicletario,
+                                    acessibilidade: acessibilidade,
                                     criado_em: DateTime.now().toString(),
                                     atualizado_em: DateTime.now().toString(),
                                     status: true,
+                                    // ATUALIZAR PARA INCLUIR O HORARIO DE INICIO e FIM <---------------------------------------------------------------------------------------------
                                   );
                                   DeskController().adicionar(context, d);
                                 } else {
