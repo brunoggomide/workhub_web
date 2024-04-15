@@ -142,10 +142,8 @@ class Desks extends StatelessWidget {
                                     DataCell(Text(desk.titulo)),
                                     DataCell(Text("R\$${desk.valor}")),
                                     DataCell(Text(desk.endereco)),
-                                    DataCell(Text(desk
-                                        .criado_em)), // ATUALIZAR PARA EXIBIR O HORARIO DE INICIO <------------------------------
-                                    DataCell(Text(desk
-                                        .atualizado_em)), // ATUALIZAR PARA EXIBIR O HORARIO DE FECHAMENTO <------------------------------------
+                                    DataCell(Text(desk.hr_abertura)),
+                                    DataCell(Text(desk.hr_fechamento)),
                                     DataCell(
                                       IconButton(
                                         icon: const Icon(Icons.edit),

@@ -592,7 +592,8 @@ class _NewDeskState extends State<NewDesk> {
                                     criado_em: DateTime.now().toString(),
                                     atualizado_em: DateTime.now().toString(),
                                     status: true,
-                                    // ATUALIZAR PARA INCLUIR O HORARIO DE INICIO e FIM <---------------------------------------------------------------------------------------------
+                                    hr_abertura: _aberturaController.text,
+                                    hr_fechamento: _fechamentoController.text,
                                   );
                                   DeskController().adicionar(context, d);
                                 } else {

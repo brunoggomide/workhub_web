@@ -27,6 +27,8 @@ class Desk {
   final String criado_em;
   final String atualizado_em;
   final bool status;
+  final String hr_abertura;
+  final String hr_fechamento;
 
   Desk(
       {required this.UID_coworking,
@@ -51,7 +53,9 @@ class Desk {
       required this.acessibilidade,
       required this.criado_em,
       required this.atualizado_em,
-      required this.status});
+      required this.status,
+      required this.hr_abertura,
+      required this.hr_fechamento});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {
@@ -76,6 +80,8 @@ class Desk {
       'acessibilidade': acessibilidade,
       'atualizado_em': FieldValue.serverTimestamp(),
       'status': status,
+      'hr_abertura': hr_abertura,
+      'hr_fechamento': hr_fechamento,
     };
 
     if (criado_em != null && criado_em.isNotEmpty) {
@@ -114,6 +120,8 @@ class Desk {
       atualizado_em: json['atualizado_em'] is Timestamp
           ? (json['atualizado_em'] as Timestamp).toDate().toString()
           : json['atualizado_em'] ?? '',
+      hr_abertura: json['hr_abertura'] ?? '',
+      hr_fechamento: json['hr_fechamento'] ?? '',
     );
   }
 }
