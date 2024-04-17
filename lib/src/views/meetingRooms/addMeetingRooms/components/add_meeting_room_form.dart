@@ -226,8 +226,12 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                 flex: 4,
                                 child: TextFormField(
                                   controller: logradouroController,
+                                  enabled: cepController.text.isNotEmpty &&
+                                          logradouroController.text.isEmpty
+                                      ? true
+                                      : false,
                                   decoration: InputDecoration(
-                                    labelText: 'Logradouro',
+                                    labelText: 'Endereço',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(2),
@@ -289,6 +293,10 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                 flex: 2,
                                 child: TextFormField(
                                   controller: bairroController,
+                                  enabled: cepController.text.isNotEmpty &&
+                                          bairroController.text.isEmpty
+                                      ? true
+                                      : false,
                                   decoration: InputDecoration(
                                     labelText: 'Bairro',
                                     isDense: true,
@@ -617,7 +625,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     fechamentoController.text,
                                     descricaoController.text,
                                     valorController.text,
-                                    int.parse(capacidadeController.text),
+                                    capacidadeController.text,
                                     acessibilidadeController.value,
                                     arCondicionadoController.value,
                                     projetorController.value,

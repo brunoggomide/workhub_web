@@ -58,7 +58,7 @@ class LargeChild extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(left: 5, top: 20),
                     child: Text(
-                        "Divulgue seus espaços de coworking com planos a partir de R\$ 29,90 mensais"),
+                        "Divulgue seus espaços de coworking com planos a partir de R\$ 39,90 mensais"),
                   ),
                   SizedBox(
                     height: 40,
@@ -149,7 +149,7 @@ class SmallChild extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(left: 12.0, top: 20),
               child: Text(
-                  "Divulgue seus espaços de coworking com planos a partir de R\$ 29,90 mensais"),
+                  "Divulgue seus espaços de coworking com planos a partir de R\$ 39,90 mensais"),
             ),
             SizedBox(
               height: 30,

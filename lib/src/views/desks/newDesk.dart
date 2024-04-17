@@ -203,7 +203,10 @@ class _NewDeskState extends State<NewDesk> {
                               flex: 4,
                               child: TextFormField(
                                 controller: _enderecoController,
-                                enabled: false,
+                                enabled: _cepController.text.isNotEmpty &&
+                                        _enderecoController.text.isEmpty
+                                    ? true
+                                    : false,
                                 decoration: InputDecoration(
                                   labelText: 'Endereço',
                                   isDense: true,
@@ -266,7 +269,10 @@ class _NewDeskState extends State<NewDesk> {
                               flex: 2,
                               child: TextFormField(
                                 controller: _bairroController,
-                                enabled: false,
+                                enabled: _cepController.text.isNotEmpty &&
+                                        _bairroController.text.isEmpty
+                                    ? true
+                                    : false,
                                 decoration: InputDecoration(
                                   labelText: 'Bairro',
                                   isDense: true,

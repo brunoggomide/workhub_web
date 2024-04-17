@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 //import 'package:workhub_web/src/views/meetingRooms/meetingRoomsPage.dart';
-import 'package:workhub_web/src/views/reservations/reservationsPage.dart';
+import 'package:workhub_web/src/views/reservations/Reservations.dart';
 
 import '../../controllers/auth/auth_controller.dart';
 //import '../meetingRooms/addMeetingRooms/addMeetingRoomPage.dart';
 import '../meetingRooms/meeting_rooms_page.dart';
-import '../reservations/reservationsCalendarPage.dart';
 import '../desks/desk.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -90,11 +89,10 @@ class _BaseScreenState extends State<BaseScreen> {
                     controller: pageController,
                     physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      ReservationsPage(pageController: pageController),
+                      Reservations(),
                       MeetingRoomsPage(),
                       Desks(),
                       Container(color: Colors.blue),
-                      ReservationsCalendarPage(pageController: pageController),
                       //AddMeetingRoomPage(pageController: pageController),
                     ]),
               ),

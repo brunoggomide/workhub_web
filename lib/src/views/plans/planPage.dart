@@ -47,13 +47,12 @@ class _PlanPageState extends State<PlanPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildPlanCard(
-                  'Essencial',
-                  'R\$ 29,90 por mês',
+                  'Basic',
+                  'R\$ 39,90 por mês',
                   '5 salas de reuniões',
                   '10 posições de trabalho',
-                  '10% de taxa de pagamento',
                   () {
-                    savePlanData('Essencial', 5, 10);
+                    savePlanData('Basic', 5, 10);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (c) {
@@ -61,17 +60,16 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão essencial Mensal pressionado');
+                    print('Botão Basic Mensal pressionado');
                   },
                 ),
                 _buildPlanCard(
-                  'Safira',
-                  'R\$ 49,90 por mês',
+                  'Plus',
+                  'R\$ 45,90 por mês',
                   '10 salas de reuniões',
                   '20 posições de trabalho',
-                  '7% de taxa de pagamento',
                   () {
-                    savePlanData('Safira', 10, 20);
+                    savePlanData('Plus', 10, 20);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (c) {
@@ -79,15 +77,14 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão safira Mensal pressionado');
+                    print('Botão Plus Mensal pressionado');
                   },
                 ),
                 _buildPlanCard(
                   'Premium',
-                  'R\$ 69,90 por mês',
+                  'R\$ 49,90 por mês',
                   'Salas de reuniões ilimitadas',
                   'Posições de trabalho ilimitadas',
-                  '5% de taxa de pagamento',
                   () {
                     savePlanData('Premium', 10000, 10000);
                     Navigator.of(context).push(
@@ -108,13 +105,12 @@ class _PlanPageState extends State<PlanPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildPlanCard(
-                  'Essencial',
-                  '10x de R\$ 29,90',
+                  'Basic',
+                  '10x de R\$ 39,90',
                   '5 salas de reuniões',
                   '10 posições de trabalho',
-                  '10% de taxa de pagamento',
                   () {
-                    savePlanData('Essencial', 5, 10);
+                    savePlanData('Basic', 5, 10);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (c) {
@@ -122,17 +118,16 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão essencial anual pressionado');
+                    print('Botão Basic anual pressionado');
                   },
                 ),
                 _buildPlanCard(
-                  'Safira',
-                  '10x de R\$ 49,90',
+                  'Plus',
+                  '10x de R\$ 45,90',
                   '10 salas de reuniões',
                   '20 posições de trabalho',
-                  '7% de taxa de pagamento',
                   () {
-                    savePlanData('Safira', 10, 20);
+                    savePlanData('Plus', 10, 20);
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (c) {
@@ -140,15 +135,14 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão safira anual pressionado');
+                    print('Botão Plus anual pressionado');
                   },
                 ),
                 _buildPlanCard(
                   'Premium',
-                  '10x de R\$ 69,90',
+                  '10x de R\$ 49,90',
                   'Salas de reuniões ilimitadas',
                   'Posições de trabalho ilimitadas',
-                  '5% de taxa de pagamento',
                   () {
                     savePlanData('Premium', 10000, 10000);
                     Navigator.of(context).push(
@@ -174,7 +168,6 @@ class _PlanPageState extends State<PlanPage> {
     String price,
     String feature1,
     String feature2,
-    String feature3,
     VoidCallback onPressed,
   ) {
     return Card(
@@ -199,7 +192,6 @@ class _PlanPageState extends State<PlanPage> {
               SizedBox(height: 16.0),
               Text(feature1),
               Text(feature2),
-              Text(feature3),
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: onPressed,

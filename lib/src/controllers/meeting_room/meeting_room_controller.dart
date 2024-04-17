@@ -21,7 +21,7 @@ class MeetingRoomController {
     String fechamento,
     String descricao,
     String valor,
-    int capacidade,
+    String capacidade,
     bool acessibilidade,
     bool arCondicionado,
     bool projetor,
