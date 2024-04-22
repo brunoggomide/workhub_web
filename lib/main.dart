@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workhub_web/src/views/base/sideBar.dart';
 import 'package:workhub_web/src/views/homepage/homepage.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
@@ -28,6 +29,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Work-Hub',
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales: const [Locale('pt', 'BR')],
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

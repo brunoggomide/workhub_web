@@ -9,4 +9,13 @@ class BookingDao {
         .where('status', isEqualTo: 'Confirmado')
         .snapshots();
   }
+
+  listarPorDia(String id, String selectedDate) {
+    return FirebaseFirestore.instance
+        .collection('reservas')
+        .where('uid_empresa', isEqualTo: id)
+        .where('status', isEqualTo: 'Confirmado')
+        .where('data', isEqualTo: selectedDate)
+        .snapshots();
+  }
 }
