@@ -529,17 +529,21 @@ class _NewDeskState extends State<NewDesk> {
                                                 width: double.infinity,
                                                 height: double.infinity,
                                               ),
-                                              IconButton(
-                                                icon: Icon(Icons.close),
-                                                onPressed: () {
-                                                  setState(() {
-                                                    _pickedImagesWeb
-                                                        .removeAt(index);
-                                                    _pickedImages
-                                                        .removeAt(index);
-                                                  });
-                                                },
-                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(4),
+                                                  color: Colors.black54,
+                                                ),
+                                                child: IconButton(
+                                                  icon: Icon(Icons.close, color: Colors.white),
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      _pickedImagesWeb.removeAt(index);
+                                                      _pickedImages.removeAt(index);
+                                                    });
+                                                  },
+                                                ),
+                                              )
                                             ],
                                           ),
                                         );

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:workhub_web/src/views/auth/login/loginPage.dart';
 import 'package:workhub_web/src/views/base/sideBar.dart';
+import 'package:workhub_web/src/views/homepage/homepage.dart';
 import 'package:workhub_web/src/views/plans/planPage.dart';
 
 import '../../views/utils/env.dart';
@@ -110,7 +111,7 @@ class AuthController {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (c) {
-          return const LoginPage();
+          return const HomePage();
         },
       ),
     );

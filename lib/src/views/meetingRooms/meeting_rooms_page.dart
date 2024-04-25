@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 
 import '../../controllers/meeting_room/meeting_room_controller.dart';
 import 'addMeetingRooms/components/add_meeting_room_form.dart';
+import 'addMeetingRooms/components/edit_meeting_room_form.dart';
 
 class MeetingRoomsPage extends StatelessWidget {
   final MeetingRoomController meetingRoomController = MeetingRoomController();
@@ -143,9 +144,6 @@ class MeetingRoomsPage extends StatelessWidget {
                                     DataCell(Text(data['titulo'] ?? '')),
                                     DataCell(Text("R\$${data['valor']}")),
                                     DataCell(Text(data['endereco'] ?? '')),
-                                    /*DataCell(Text(
-                                        (data['capacidade']?.toString() ??
-                                            ''))),*/
                                     DataCell(Text(data['hr_abertura'] ?? '')),
                                     DataCell(Text(data['hr_fechamento'] ?? '')),
                                     DataCell(
@@ -155,7 +153,16 @@ class MeetingRoomsPage extends StatelessWidget {
                                           children: [
                                             IconButton(
                                               icon: const Icon(Icons.edit),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog(
+                                                    barrierDismissible: false,
+                                                    context: context,
+                                                    builder: (_) {
+                                                      return EditMeetingRoomForm(
+                                                        documentId: document.id,
+                                                      );
+                                                    });
+                                              },
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.delete),

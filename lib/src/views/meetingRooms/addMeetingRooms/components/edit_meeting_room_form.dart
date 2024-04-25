@@ -1,5 +1,6 @@
-/*import 'dart:io';
+import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,13 +12,21 @@ import '../../../desks/components/moneyFormat.dart';
 import '../../../utils/timeFormat.dart';
 
 class EditMeetingRoomForm extends StatefulWidget {
-  const EditMeetingRoomForm({super.key});
+  final documentId;
+
+  const EditMeetingRoomForm({
+    super.key,
+    required this.documentId,
+  });
 
   @override
   State<EditMeetingRoomForm> createState() => _EditMeetingRoomFormState();
 }
 
 class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
+  final MeetingRoomController meetingRoomController = MeetingRoomController();
+  DocumentSnapshot? _meetingRoom;
+
   final TextEditingController cepController = TextEditingController();
   final TextEditingController logradouroController = TextEditingController();
   final TextEditingController numeroController = TextEditingController();
@@ -81,6 +90,38 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
     tvController.dispose();
 
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadMeetingRoom();
+
+  }
+
+  void loadMeetingRoom() async {
+    _meetingRoom = await meetingRoomController.getMeetingRoom(widget.documentId);
+
+    Map<String, dynamic> data = _meetingRoom!.data() as Map<String, dynamic>;
+    cepController.text = data['cep'] ?? '';
+    logradouroController.text = data['endereco'] ?? '';
+    numeroController.text = data['numero'] ?? '';
+    bairroController.text = data['bairro'] ?? '';
+    complementoController.text = data['complemento'] ?? '';
+    cidadeController.text = data['cidade'] ?? '';
+    ufController.text = data['uf'] ?? '';
+    tituloController.text = data['titulo'] ?? '';
+    aberturaController.text = data['hr_abertura'] ?? '';
+    fechamentoController.text = data['hr_fechamento'] ?? '';
+    descricaoController.text = data['descricao'] ?? '';
+    valorController.text = data['valor'] ?? '';
+    capacidadeController.text = data['capacidade'] ?? '';
+    acessibilidadeController.value = data['acessibilidade'] ?? false;
+    arCondicionadoController.value = data['arCondicionado'] ?? false;
+    projetorController.value = data['projetor'] ?? false;
+    quadroBrancoController.value = data['quadroBranco'] ?? false;
+    tvController.value = data['tv'] ?? false;
+    setState(() {});
   }
 
   @override
@@ -694,30 +735,8 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                     cidadeController.text.isNotEmpty &&
                                     ufController.text.isNotEmpty) {
                                   var meetingRoomController =
-                                      MeetingRoomController(); // Aplicar uso de model
-                                  meetingRoomController.addMeetingRoom(
-                                    cepController.text,
-                                    logradouroController.text,
-                                    numeroController.text,
-                                    bairroController.text,
-                                    complementoController.text,
-                                    ufController.text,
-                                    cidadeController.text,
-                                    tituloController.text,
-                                    aberturaController.text,
-                                    fechamentoController.text,
-                                    descricaoController.text,
-                                    valorController.text,
-                                    int.parse(capacidadeController.text),
-                                    acessibilidadeController.value,
-                                    arCondicionadoController.value,
-                                    projetorController.value,
-                                    quadroBrancoController.value,
-                                    tvController.value,
-                                    bicicletarioController.value,
-                                    DateTime.now(),
-                                    _pickedImagesWeb,
-                                  );
+                                      MeetingRoomController(); // ----------------------------Aplicar uso de model
+                                  
 
                                   Navigator.of(context).pop();
 
@@ -808,4 +827,3 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
     }
   }
 }
-*/

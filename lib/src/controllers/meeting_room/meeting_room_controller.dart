@@ -1,37 +1,18 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import 'package:workhub_web/src/controllers/auth/auth_controller.dart';
+
+import '../../models/meeting_room_model.dart';
+import '../../views/utils/env.dart';
 
 class MeetingRoomController {
   final CollectionReference _meetingRooms =
       FirebaseFirestore.instance.collection('salas');
 
-  Future<void> addMeetingRoom(
-    String cep,
-    String logradouro,
-    String numero,
-    String bairro,
-    String complemento,
-    String uf,
-    String cidade,
-    String titulo,
-    String abertura,
-    String fechamento,
-    String descricao,
-    String valor,
-    String capacidade,
-    bool acessibilidade,
-    bool arCondicionado,
-    bool projetor,
-    bool quadroBranco,
-    bool tv,
-    bool videoconferencia,
-    DateTime dtCriacao,
-    List<Uint8List> imagens,
-  ) async {
-    var uidCoworking = AuthController().idUsuario();
+  Future<void> addMeetingRoom(MeetingRoom meetingRoom, List<Uint8List> imagens, context) async {
     List<String> imagePaths = [];
 
     DocumentReference meetingRoomRef = _meetingRooms.doc();
@@ -41,7 +22,7 @@ class MeetingRoomController {
       final imageName = Uuid().v1();
 
       final imagePath =
-          '/meeting_rooms_images/$uidCoworking/${meetingRoomRef.id}/$imageName.jpg';
+          '/meeting_rooms_images/${meetingRoom.UID_coworking}/${meetingRoomRef.id}/$imageName.jpg';
 
       final ref =
           firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
@@ -59,40 +40,28 @@ class MeetingRoomController {
       }
     }
 
-    try {
-      await meetingRoomRef.set({
-        'titulo': titulo,
-        'UID_coworking': uidCoworking,
-        'descricao': descricao,
-        'valor': valor,
-        'fotos': imagePaths,
-        'hr_abertura': abertura,
-        'hr_fechamento': fechamento,
-        'cep': cep,
-        'endereco': logradouro,
-        'numero': numero,
-        'cidade': cidade,
-        'uf': uf,
-        'complemento': complemento,
-        'bairro': bairro,
-        'quadro_branco': quadroBranco,
-        'projetor': projetor,
-        'ar_condicionado': arCondicionado,
-        'tv': tv,
-        'videoconferencia': videoconferencia,
-        'acessibilidade': acessibilidade,
-        // crair campo status e avisar bruno para atualizar diagraam de classe
-        'criado_em': dtCriacao,
-        'atualizado_em': dtCriacao,
-        'capacidade': capacidade,
-      });
-      print('Sala de reunião adicionada com sucesso.');
-    } catch (e) {
-      print('Erro ao adicionar os dados da sala de reunião ao Firestore: $e');
-    }
+    meetingRoom.fotos = imagePaths;
+
+    FirebaseFirestore.instance
+        .collection('mesas')
+        .add(meetingRoom.toJson())
+        .then((value) => sucesso(context, 'Sala de reunião adicionada com sucesso.'))
+        .catchError((e) => erro(context, 'Não foi possível adicionar a sala. Error: $e'))
+        .whenComplete(() => Navigator.of(context).pop());
   }
 
   Stream<QuerySnapshot> getMeetingRooms() {
     return _meetingRooms.snapshots();
+  }
+
+  Future<DocumentSnapshot> getMeetingRoom(String id) async {
+    try {
+      final DocumentSnapshot meetingRoom = await _meetingRooms.doc(id).get();
+      print(meetingRoom.data());
+      return meetingRoom;
+    } catch (e) {
+      print('Erro ao obter os dados da sala de reunião do Firestore: $e');
+      throw e;
+    }
   }
 }

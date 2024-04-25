@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
+import '../../../../models/meeting_room_model.dart';
 import '../../../../services/cep.dart';
 import '../../../desks/components/moneyFormat.dart';
 import '../../../utils/timeFormat.dart';
@@ -18,6 +20,8 @@ class AddMeetingRoomForm extends StatefulWidget {
 }
 
 class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
+  var meetingRoomController = MeetingRoomController();
+
   final TextEditingController cepController = TextEditingController();
   final TextEditingController logradouroController = TextEditingController();
   final TextEditingController numeroController = TextEditingController();
@@ -563,17 +567,21 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                                   width: double.infinity,
                                                   height: double.infinity,
                                                 ),
-                                                IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _pickedImagesWeb
-                                                          .removeAt(index);
-                                                      _pickedImages
-                                                          .removeAt(index);
-                                                    });
-                                                  },
-                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(4),
+                                                    color: Colors.black54,
+                                                  ),
+                                                  child: IconButton(
+                                                    icon: Icon(Icons.close, color: Colors.white),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _pickedImagesWeb.removeAt(index);
+                                                        _pickedImages.removeAt(index);
+                                                      });
+                                                    },
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           );
@@ -610,41 +618,35 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     bairroController.text.isNotEmpty &&
                                     cidadeController.text.isNotEmpty &&
                                     ufController.text.isNotEmpty) {
-                                  var meetingRoomController =
-                                      MeetingRoomController(); // Aplicar uso de model
-                                  meetingRoomController.addMeetingRoom(
-                                    cepController.text,
-                                    logradouroController.text,
-                                    numeroController.text,
-                                    bairroController.text,
-                                    complementoController.text,
-                                    ufController.text,
-                                    cidadeController.text,
-                                    tituloController.text,
-                                    aberturaController.text,
-                                    fechamentoController.text,
-                                    descricaoController.text,
-                                    valorController.text,
-                                    capacidadeController.text,
-                                    acessibilidadeController.value,
-                                    arCondicionadoController.value,
-                                    projetorController.value,
-                                    quadroBrancoController.value,
-                                    tvController.value,
-                                    videoconferenciaController.value,
-                                    DateTime.now(),
-                                    _pickedImagesWeb,
+                                  
+                                  MeetingRoom meetingRoom = MeetingRoom(
+                                    id: null,
+                                    UID_coworking: AuthController().idUsuario(),
+                                    titulo: tituloController.text,
+                                    valor: valorController.text,
+                                    capacidade: capacidadeController.text,
+                                    cep: cepController.text,
+                                    endereco: logradouroController.text,
+                                    num_endereco: numeroController.text,
+                                    cidade: cidadeController.text,
+                                    uf: ufController.text,
+                                    bairro: bairroController.text,
+                                    complemento: complementoController.text,
+                                    descricao: descricaoController.text,
+                                    fotos: [],
+                                    projetor: projetorController.value,
+                                    videoconferencia: videoconferenciaController.value,
+                                    ar_condicionado: arCondicionadoController.value,
+                                    quadro_branco: quadroBrancoController.value,
+                                    tv: tvController.value,
+                                    acessibilidade: acessibilidadeController.value,
+                                    criado_em: DateTime.now().toString(),
+                                    atualizado_em: DateTime.now().toString(),
+                                    hr_abertura: aberturaController.text,
+                                    hr_fechamento: fechamentoController.text,
                                   );
+                                  meetingRoomController.addMeetingRoom(meetingRoom, _pickedImagesWeb, context);
 
-                                  Navigator.of(context).pop();
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      backgroundColor: Colors.green,
-                                      content:
-                                          Text('Sala cadastrada com sucesso!'),
-                                    ),
-                                  );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
