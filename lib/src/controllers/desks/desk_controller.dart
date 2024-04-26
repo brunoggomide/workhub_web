@@ -62,9 +62,34 @@ class DeskController {
   listar() {
     return FirebaseFirestore.instance
         .collection('mesas')
+        .where('UID_coworking', isEqualTo: AuthController().idUsuario())
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) => Desk.fromJson(doc.data())).toList();
     });
+  }
+
+  contarMesas() async {
+    var uidCoworking = AuthController().idUsuario();
+    int totalMesas = 0;
+
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('mesas')
+          .where('UID_coworking', isEqualTo: uidCoworking)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        // Usar um cast para Map<String, dynamic>
+        var data = doc.data() as Map<String, dynamic>;
+        String numMesasStr = data['num_mesas'] ?? '0';
+        int numMesas = int.tryParse(numMesasStr) ?? 0;
+        totalMesas += numMesas;
+      }
+    } catch (e) {
+      print('Erro ao contar mesas: $e');
+    }
+
+    return totalMesas;
   }
 }

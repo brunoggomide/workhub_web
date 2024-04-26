@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workhub_web/src/views/profile/profile.dart';
 //import 'package:workhub_web/src/views/meetingRooms/meetingRoomsPage.dart';
 import 'package:workhub_web/src/views/reservations/Reservations.dart';
 
@@ -92,7 +93,7 @@ class _BaseScreenState extends State<BaseScreen> {
                       Reservations(),
                       MeetingRoomsPage(),
                       Desks(),
-                      Container(color: Colors.blue),
+                      Profile()
                       //AddMeetingRoomPage(pageController: pageController),
                     ]),
               ),

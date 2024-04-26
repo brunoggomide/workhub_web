@@ -12,7 +12,8 @@ class MeetingRoomController {
   final CollectionReference _meetingRooms =
       FirebaseFirestore.instance.collection('salas');
 
-  Future<void> addMeetingRoom(MeetingRoom meetingRoom, List<Uint8List> imagens, context) async {
+  Future<void> addMeetingRoom(
+      MeetingRoom meetingRoom, List<Uint8List> imagens, context) async {
     List<String> imagePaths = [];
 
     DocumentReference meetingRoomRef = _meetingRooms.doc();
@@ -43,10 +44,12 @@ class MeetingRoomController {
     meetingRoom.fotos = imagePaths;
 
     FirebaseFirestore.instance
-        .collection('mesas')
+        .collection('salas')
         .add(meetingRoom.toJson())
-        .then((value) => sucesso(context, 'Sala de reunião adicionada com sucesso.'))
-        .catchError((e) => erro(context, 'Não foi possível adicionar a sala. Error: $e'))
+        .then((value) =>
+            sucesso(context, 'Sala de reunião adicionada com sucesso.'))
+        .catchError((e) =>
+            erro(context, 'Não foi possível adicionar a sala. Error: $e'))
         .whenComplete(() => Navigator.of(context).pop());
   }
 

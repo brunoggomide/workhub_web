@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:workhub_web/src/views/auth/login/loginPage.dart';
 import 'package:workhub_web/src/views/base/sideBar.dart';
 import 'package:workhub_web/src/views/homepage/homepage.dart';
-import 'package:workhub_web/src/views/plans/planPage.dart';
 
 import '../../views/utils/env.dart';
 
@@ -117,49 +116,30 @@ class AuthController {
     );
   }
 
-  static Future<String?> getEmailByUid(String uid) async {
+  alterarSenha(
+      context, String email, String senhaAtual, String novaSenha) async {
     try {
-      // Buscar o documento do usuário pelo UID
-      var document = await FirebaseFirestore.instance
-          .collection('clientes')
-          .where('uid', isEqualTo: uid)
-          .limit(1)
-          .get();
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: senhaAtual,
+      );
 
-      if (document.docs.isNotEmpty) {
-        // Retornar o e-mail se o documento for encontrado
-        return document.docs.first.data()['email'] as String?;
-      } else {
-        // Retornar nulo se nenhum documento for encontrado
-        return null;
+      await FirebaseAuth.instance.currentUser!.updatePassword(novaSenha);
+      Navigator.pop(context);
+
+      sucesso(context, 'Senha alterada com sucesso.');
+    } on FirebaseAuthException catch (e) {
+      // Definindo o tipo de exceção como FirebaseAuthException
+      switch (e.code) {
+        case 'wrong-password':
+          erro(context, 'Senha atual incorreta.');
+          break;
+        default:
+          erro(context, 'Senha atual incorreta.');
       }
     } catch (e) {
-      // Tratar exceções, se necessário
-      print('Erro ao buscar o e-mail: $e');
-      return null;
-    }
-  }
-
-  static Future<String?> getNumberByUid(String uid) async {
-    try {
-      // Buscar o documento do usuário pelo UID
-      var document = await FirebaseFirestore.instance
-          .collection('clientes')
-          .where('uid', isEqualTo: uid)
-          .limit(1)
-          .get();
-
-      if (document.docs.isNotEmpty) {
-        // Retornar o e-mail se o documento for encontrado
-        return document.docs.first.data()['contato'] as String?;
-      } else {
-        // Retornar nulo se nenhum documento for encontrado
-        return null;
-      }
-    } catch (e) {
-      // Tratar exceções, se necessário
-      print('Erro ao buscar o e-mail: $e');
-      return null;
+      // Lidar com outros possíveis erros
+      erro(context, 'Falha no servidor.');
     }
   }
 

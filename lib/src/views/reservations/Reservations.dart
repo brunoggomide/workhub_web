@@ -82,7 +82,7 @@ class _ReservationsState extends State<Reservations> {
                     ),
                     elevation: 2.0,
                     padding: const EdgeInsets.all(12.0),
-                    child: const Text('Clear Filters'),
+                    child: const Text('Limpar filtros'),
                   ),
                 ),
               ],
@@ -188,7 +188,7 @@ class _ReservationsState extends State<Reservations> {
                                         '')),
                                     DataCell(
                                       FutureBuilder<String?>(
-                                        future: AuthController.getEmailByUid(
+                                        future: BookingDao.getEmailByUid(
                                             data['uid_cliente']),
                                         builder: (BuildContext context,
                                             AsyncSnapshot<String?> snapshot) {
@@ -204,7 +204,7 @@ class _ReservationsState extends State<Reservations> {
                                     ),
                                     DataCell(
                                       FutureBuilder<String?>(
-                                        future: AuthController.getNumberByUid(
+                                        future: BookingDao.getNumberByUid(
                                             data['uid_cliente']),
                                         builder: (BuildContext context,
                                             AsyncSnapshot<String?> snapshot) {
