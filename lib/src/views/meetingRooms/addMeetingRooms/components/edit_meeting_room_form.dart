@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
+import '../../../../models/meeting_room_model.dart';
 import '../../../../services/cep.dart';
 import '../../../desks/components/moneyFormat.dart';
 import '../../../utils/timeFormat.dart';
@@ -96,11 +98,11 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   void initState() {
     super.initState();
     loadMeetingRoom();
-
   }
 
   void loadMeetingRoom() async {
-    _meetingRoom = await meetingRoomController.getMeetingRoom(widget.documentId);
+    _meetingRoom =
+        await meetingRoomController.getMeetingRoom(widget.documentId);
 
     Map<String, dynamic> data = _meetingRoom!.data() as Map<String, dynamic>;
     cepController.text = data['cep'] ?? '';
@@ -735,18 +737,34 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                     cidadeController.text.isNotEmpty &&
                                     ufController.text.isNotEmpty) {
                                   var meetingRoomController =
-                                      MeetingRoomController(); // ----------------------------Aplicar uso de model
-                                  
+                                      MeetingRoomController();
+                                  var meetingRoomAtualizado = MeetingRoom(
+                                    // id da sala, se tiver como nao alterar e recuperar de _meetingRoom, melhor
 
-                                  Navigator.of(context).pop();
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      backgroundColor: Colors.green,
-                                      content:
-                                          Text('Sala cadastrada com sucesso!'),
-                                    ),
+                                    UID_coworking: AuthController().idUsuario(),
+                                    titulo: tituloController.text,
+                                    valor: valorController.text,
+                                    capacidade: capacidadeController.text,
+                                    cep: cepController.text,
+                                    endereco: logradouroController.text,
+                                    num_endereco: numeroController.text,
+                                    cidade: cidadeController.text,
+                                    uf: ufController.text,
+                                    bairro: bairroController.text,
+                                    complemento: complementoController.text,
+                                    descricao: descricaoController.text,
+                                    ar_condicionado:
+                                        arCondicionadoController.value,
+                                    acessibilidade:
+                                        acessibilidadeController.value,
+                                    hr_abertura: aberturaController.text,
+                                    hr_fechamento: fechamentoController.text,
                                   );
+
+                                  meetingRoomController.addMeetingRoom(
+                                      meetingRoomAtualizado,
+                                      _pickedImagesWeb,
+                                      context);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

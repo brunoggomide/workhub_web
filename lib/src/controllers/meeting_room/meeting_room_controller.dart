@@ -67,4 +67,44 @@ class MeetingRoomController {
       throw e;
     }
   }
+
+  Future<void> updateMeetingRoom(String id, MeetingRoom meetingRoom,
+      List<Uint8List> imagens, context) async {
+    List<String> imagePaths = [];
+
+    for (Uint8List imagem in imagens) {
+      // Gera um UUID único para cada imagem
+      final imageName = Uuid().v1();
+
+      final imagePath =
+          '/meeting_rooms_images/${meetingRoom.UID_coworking}/$id/$imageName.jpg';
+
+      final ref =
+          firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
+
+      try {
+        await ref.putData(imagem,
+            firebase_storage.SettableMetadata(contentType: 'image/jpeg'));
+
+        final downloadUrl = await ref.getDownloadURL();
+
+        imagePaths.add(downloadUrl);
+      } catch (e) {
+        print('Erro ao carregar a imagem: $e');
+        return;
+      }
+    }
+
+    meetingRoom.fotos = imagePaths;
+
+    FirebaseFirestore.instance
+        .collection('salas')
+        .doc(id)
+        .update(meetingRoom.toJson())
+        .then((value) =>
+            sucesso(context, 'Sala de reunião atualizada com sucesso.'))
+        .catchError((e) =>
+            erro(context, 'Não foi possível atualizar a sala. Error: $e'))
+        .whenComplete(() => Navigator.of(context).pop());
+  }
 }
