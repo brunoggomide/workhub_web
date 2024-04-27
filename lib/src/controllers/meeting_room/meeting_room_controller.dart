@@ -57,18 +57,18 @@ class MeetingRoomController {
     return _meetingRooms.snapshots();
   }
 
-  Future<DocumentSnapshot> getMeetingRoom(String id) async {
+  Future<MeetingRoom> getMeetingRoom(String id) async {
     try {
-      final DocumentSnapshot meetingRoom = await _meetingRooms.doc(id).get();
-      print(meetingRoom.data());
-      return meetingRoom;
+      final DocumentSnapshot docSnapshot = await _meetingRooms.doc(id).get();
+      return MeetingRoom.fromJson(docSnapshot.data() as Map<String, dynamic>);
     } catch (e) {
       print('Erro ao obter os dados da sala de reunião do Firestore: $e');
       throw e;
     }
   }
 
-  Future<void> updateMeetingRoom(String id, MeetingRoom meetingRoom,
+  Future<void> updateMeetingRoom(String documentId,
+      MeetingRoom meetingRoom,
       List<Uint8List> imagens, context) async {
     List<String> imagePaths = [];
 
@@ -77,7 +77,7 @@ class MeetingRoomController {
       final imageName = Uuid().v1();
 
       final imagePath =
-          '/meeting_rooms_images/${meetingRoom.UID_coworking}/$id/$imageName.jpg';
+          '/meeting_rooms_images/${meetingRoom.UID_coworking}/$documentId/$imageName.jpg';
 
       final ref =
           firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
@@ -99,12 +99,22 @@ class MeetingRoomController {
 
     FirebaseFirestore.instance
         .collection('salas')
-        .doc(id)
+        .doc(documentId)
         .update(meetingRoom.toJson())
         .then((value) =>
             sucesso(context, 'Sala de reunião atualizada com sucesso.'))
         .catchError((e) =>
             erro(context, 'Não foi possível atualizar a sala. Error: $e'))
         .whenComplete(() => Navigator.of(context).pop());
+  }
+
+  Future<void> deleteMeetingRoom(String documentId) async {
+    try {
+      await FirebaseFirestore.instance.collection('salas').doc(documentId).delete();  // -------------------------Lembrar de implementar exclusao de imagens no firestore dps
+      print('Sala de reunião excluída com sucesso.');
+    } catch (e) {
+      print('Erro ao excluir a sala de reunião: $e');
+      throw e;
+    }
   }
 }

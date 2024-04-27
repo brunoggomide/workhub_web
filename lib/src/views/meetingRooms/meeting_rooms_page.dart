@@ -166,7 +166,38 @@ class MeetingRoomsPage extends StatelessWidget {
                                             ),
                                             IconButton(
                                               icon: const Icon(Icons.delete),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: const Text(
+                                                          'Excluir sala de reunião'),
+                                                      content: const Text(
+                                                          'Tem certeza que deseja excluir essa sala de reunião?'),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            meetingRoomController
+                                                                .deleteMeetingRoom(
+                                                                    document.id);
+                                                            Navigator.of(context)
+                                                                .pop();
+                                                          },
+                                                          child: const Text('Sim'),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(context)
+                                                                .pop();
+                                                          },
+                                                          child: const Text('Não'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                              }
                                             ),
                                           ],
                                         ),

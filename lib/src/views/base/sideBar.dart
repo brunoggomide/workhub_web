@@ -94,7 +94,6 @@ class _BaseScreenState extends State<BaseScreen> {
                       MeetingRoomsPage(),
                       Desks(),
                       Profile()
-                      //AddMeetingRoomPage(pageController: pageController),
                     ]),
               ),
             ],
