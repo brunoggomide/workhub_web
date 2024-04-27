@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class MeetingRoom {
-  final String? id;
   final String UID_coworking;
   final String titulo;
   final String valor;
@@ -24,14 +23,13 @@ class MeetingRoom {
   final bool quadro_branco;
   final bool tv;
   final bool acessibilidade;
-  final String criado_em;
-  final String atualizado_em;
+  final String? criado_em;
+  final String? atualizado_em;  // Excluir depois, nao precisa dessa variavel
   final String hr_abertura;
   final String hr_fechamento;
 
   MeetingRoom(
-      {this.id,
-      required this.UID_coworking,
+      {required this.UID_coworking,
       required this.titulo,
       required this.valor,
       required this.capacidade,
@@ -50,14 +48,13 @@ class MeetingRoom {
       required this.quadro_branco,
       required this.tv,
       required this.acessibilidade,
-      required this.criado_em,
+      this.criado_em,
       required this.atualizado_em,
       required this.hr_abertura,
       required this.hr_fechamento,});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {
-      'id': id,
       'UID_coworking': UID_coworking,
       'titulo': titulo,
       'valor': valor,
@@ -82,7 +79,9 @@ class MeetingRoom {
       'hr_fechamento': hr_fechamento,
     };
 
-    if (criado_em != null && criado_em.isNotEmpty) {
+    if (criado_em != null) {
+      json['criado_em'] = criado_em;
+    } else {
       json['criado_em'] = FieldValue.serverTimestamp();
     }
 
@@ -91,7 +90,6 @@ class MeetingRoom {
 
   factory MeetingRoom.fromJson(Map<String, dynamic> json) {
     return MeetingRoom(
-    id: json['id'] ?? '',
     UID_coworking: json['UID_coworking'] ?? '',
     titulo: json['titulo'] ?? '',
     valor: json['valor'] ?? '',
@@ -120,5 +118,57 @@ class MeetingRoom {
     hr_abertura: json['hr_abertura'] ?? '',
     hr_fechamento: json['hr_fechamento'] ?? '',
   );
+  }
+
+  MeetingRoom copyWith({
+    String? UID_coworking,
+    String? titulo,
+    String? valor,
+    String? capacidade,
+    String? cep,
+    String? endereco,
+    String? num_endereco,
+    String? cidade,
+    String? uf,
+    String? bairro,
+    String? complemento,
+    String? descricao,
+    List<String>? fotos,
+    bool? projetor,
+    bool? videoconferencia,
+    bool? ar_condicionado,
+    bool? quadro_branco,
+    bool? tv,
+    bool? acessibilidade,
+    Timestamp? atualizado_em,
+    Timestamp? criado_em,
+    String? hr_abertura,
+    String? hr_fechamento,
+  }) {
+    return MeetingRoom(
+      UID_coworking: UID_coworking ?? this.UID_coworking,
+      titulo: titulo ?? this.titulo,
+      valor: valor ?? this.valor,
+      capacidade: capacidade ?? this.capacidade,
+      cep: cep ?? this.cep,
+      endereco: endereco ?? this.endereco,
+      num_endereco: num_endereco ?? this.num_endereco,
+      cidade: cidade ?? this.cidade,
+      uf: uf ?? this.uf,
+      bairro: bairro ?? this.bairro,
+      complemento: complemento ?? this.complemento,
+      descricao: descricao ?? this.descricao,
+      fotos: fotos ?? this.fotos,
+      projetor: projetor ?? this.projetor,
+      videoconferencia: videoconferencia ?? this.videoconferencia,
+      ar_condicionado: ar_condicionado ?? this.ar_condicionado,
+      quadro_branco: quadro_branco ?? this.quadro_branco,
+      tv: tv ?? this.tv,
+      acessibilidade: acessibilidade ?? this.acessibilidade,
+      atualizado_em: atualizado_em?.toDate().toString() ?? this.atualizado_em,
+      criado_em: criado_em?.toDate().toString() ?? this.criado_em,
+      hr_abertura: hr_abertura ?? this.hr_abertura,
+      hr_fechamento: hr_fechamento ?? this.hr_fechamento,
+    );
   }
 }

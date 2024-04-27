@@ -620,7 +620,6 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     ufController.text.isNotEmpty) {
                                   
                                   MeetingRoom meetingRoom = MeetingRoom(
-                                    id: null,
                                     UID_coworking: AuthController().idUsuario(),
                                     titulo: tituloController.text,
                                     valor: valorController.text,
@@ -629,7 +628,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     endereco: logradouroController.text,
                                     num_endereco: numeroController.text,
                                     cidade: cidadeController.text,
-                                    uf: ufController.text,
+                                    uf: ufController.text,         //  --------------------------- atualizar para fazer add com model
                                     bairro: bairroController.text,
                                     complemento: complementoController.text,
                                     descricao: descricaoController.text,

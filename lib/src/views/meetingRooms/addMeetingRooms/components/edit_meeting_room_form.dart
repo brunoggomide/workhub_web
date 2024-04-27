@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
+import '../../../../models/meeting_room_model.dart';
 import '../../../../services/cep.dart';
 import '../../../desks/components/moneyFormat.dart';
 import '../../../utils/timeFormat.dart';
@@ -25,7 +27,7 @@ class EditMeetingRoomForm extends StatefulWidget {
 
 class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   final MeetingRoomController meetingRoomController = MeetingRoomController();
-  DocumentSnapshot? _meetingRoom;
+  MeetingRoom? _meetingRoom;
 
   final TextEditingController cepController = TextEditingController();
   final TextEditingController logradouroController = TextEditingController();
@@ -43,6 +45,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   final TextEditingController capacidadeController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
   final HourTextInputFormatter _hourFormatter = HourTextInputFormatter();
+  
 
   final ValueNotifier<bool> acessibilidadeController =
       ValueNotifier<bool>(false);
@@ -51,12 +54,9 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   final ValueNotifier<bool> projetorController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> quadroBrancoController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> tvController = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> cafeController = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> estacionamentoController =
-      ValueNotifier<bool>(false);
-  final ValueNotifier<bool> bicicletarioController = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> espacoInterativoController =
-      ValueNotifier<bool>(false);
+  final ValueNotifier<bool> videoconferenciaController = ValueNotifier<bool>(false);
+
+  
 
   final cepFormat = MaskTextInputFormatter(
     mask: '#####-###',
@@ -70,42 +70,22 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
 
   DateTime? dtCriacao;
 
-  @override
-  void dispose() {
-    cepController.dispose();
-    logradouroController.dispose();
-    numeroController.dispose();
-    bairroController.dispose();
-    complementoController.dispose();
-    cidadeController.dispose();
-    tituloController.dispose();
-    descricaoController.dispose();
-    valorController.dispose();
-    capacidadeController.dispose();
-
-    acessibilidadeController.dispose();
-    arCondicionadoController.dispose();
-    projetorController.dispose();
-    quadroBrancoController.dispose();
-    tvController.dispose();
-
-    super.dispose();
-  }
 
   @override
   void initState() {
     super.initState();
     loadMeetingRoom();
-
+    
   }
 
   void loadMeetingRoom() async {
-    _meetingRoom = await meetingRoomController.getMeetingRoom(widget.documentId);
+    _meetingRoom =
+        await meetingRoomController.getMeetingRoom(widget.documentId);
 
-    Map<String, dynamic> data = _meetingRoom!.data() as Map<String, dynamic>;
+    var data = _meetingRoom!.toJson();
     cepController.text = data['cep'] ?? '';
     logradouroController.text = data['endereco'] ?? '';
-    numeroController.text = data['numero'] ?? '';
+    numeroController.text = data['num_endereco'] ?? '';
     bairroController.text = data['bairro'] ?? '';
     complementoController.text = data['complemento'] ?? '';
     cidadeController.text = data['cidade'] ?? '';
@@ -121,6 +101,8 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
     projetorController.value = data['projetor'] ?? false;
     quadroBrancoController.value = data['quadroBranco'] ?? false;
     tvController.value = data['tv'] ?? false;
+
+    
     setState(() {});
   }
 
@@ -379,6 +361,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                                                       
                                     Row(
                                       children: [
                                         Flexible(
@@ -389,62 +372,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                               Row(
                                                 children: [
                                                   Icon(
-                                                    Icons.coffee,
-                                                    size: 20,
-                                                  ),
-                                                  Text(' Café'),
-                                                ],
-                                              ),
-                                              Switch(
-                                                value: cafeController.value,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    cafeController.value =
-                                                        value;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: 6.0),
-                                        Flexible(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.local_parking,
-                                                    size: 20,
-                                                  ),
-                                                  Text(' Estacionamento'),
-                                                ],
-                                              ),
-                                              Switch(
-                                                value: estacionamentoController
-                                                    .value,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    estacionamentoController
-                                                        .value = value;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(width: 6.0),
-                                        Flexible(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.severe_cold,
+                                                    Icons.ac_unit,
                                                     size: 20,
                                                   ),
                                                   Text(' Ar-Condicionado'),
@@ -463,39 +391,6 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                             ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 12.0),
-                                    Row(
-                                      children: [
-                                        Flexible(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.interests,
-                                                    size: 20,
-                                                  ),
-                                                  Text(' Espaço interativo'),
-                                                ],
-                                              ),
-                                              Switch(
-                                                value:
-                                                    espacoInterativoController
-                                                        .value,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    espacoInterativoController
-                                                        .value = value;
-                                                  });
-                                                },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
                                         SizedBox(width: 6.0),
                                         Flexible(
                                           child: Column(
@@ -505,18 +400,19 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                               Row(
                                                 children: [
                                                   Icon(
-                                                    Icons.pedal_bike,
+                                                    Icons.video_call,
                                                     size: 20,
                                                   ),
-                                                  Text(' Bicicletário'),
+                                                  Text(' Vídeoconferência'),
                                                 ],
                                               ),
                                               Switch(
-                                                value: bicicletarioController
-                                                    .value,
+                                                value:
+                                                    videoconferenciaController
+                                                        .value,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    bicicletarioController
+                                                    videoconferenciaController
                                                         .value = value;
                                                   });
                                                 },
@@ -638,7 +534,9 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                         ),
                                       ],
                                     ),
+                                    
                                   ],
+                                  
                                 ),
                               ),
                               Expanded(
@@ -735,18 +633,38 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                     cidadeController.text.isNotEmpty &&
                                     ufController.text.isNotEmpty) {
                                   var meetingRoomController =
-                                      MeetingRoomController(); // ----------------------------Aplicar uso de model
-                                  
-
-                                  Navigator.of(context).pop();
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      backgroundColor: Colors.green,
-                                      content:
-                                          Text('Sala cadastrada com sucesso!'),
-                                    ),
+                                      MeetingRoomController();
+                                      
+                                  var meetingRoomAtualizado = _meetingRoom!.copyWith(
+                                    titulo: tituloController.text,
+                                    valor: valorController.text,
+                                    capacidade: capacidadeController.text,
+                                    cep: cepController.text,
+                                    endereco: logradouroController.text,
+                                    num_endereco: numeroController.text,
+                                    cidade: cidadeController.text,
+                                    uf: ufController.text,           // -------------- ADICIONAR EDIT DE FOTOSs
+                                    bairro: bairroController.text,
+                                    complemento: complementoController.text,
+                                    descricao: descricaoController.text,
+                                    ar_condicionado:
+                                        arCondicionadoController.value,
+                                    acessibilidade:
+                                        acessibilidadeController.value,
+                                    projetor: projetorController.value,
+                                    tv: tvController.value,
+                                    videoconferencia: videoconferenciaController.value,
+                                    quadro_branco: quadroBrancoController.value,
+                                    hr_abertura: aberturaController.text,
+                                    hr_fechamento: fechamentoController.text,
                                   );
+
+                                  meetingRoomController.updateMeetingRoom(
+                                      widget.documentId,
+                                      meetingRoomAtualizado,
+                                      _pickedImagesWeb,
+                                      context);
+
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
