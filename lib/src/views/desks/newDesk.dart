@@ -81,7 +81,7 @@ class _NewDeskState extends State<NewDesk> {
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'Nova Posição',
+                            'Nova Mesa',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -531,15 +531,19 @@ class _NewDeskState extends State<NewDesk> {
                                               ),
                                               Container(
                                                 decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(4),
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
                                                   color: Colors.black54,
                                                 ),
                                                 child: IconButton(
-                                                  icon: Icon(Icons.close, color: Colors.white),
+                                                  icon: Icon(Icons.close,
+                                                      color: Colors.white),
                                                   onPressed: () {
                                                     setState(() {
-                                                      _pickedImagesWeb.removeAt(index);
-                                                      _pickedImages.removeAt(index);
+                                                      _pickedImagesWeb
+                                                          .removeAt(index);
+                                                      _pickedImages
+                                                          .removeAt(index);
                                                     });
                                                   },
                                                 ),

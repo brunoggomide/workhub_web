@@ -228,7 +228,7 @@ class _ReservationsState extends State<Reservations> {
                             return Padding(
                               padding: const EdgeInsets.all(20.0),
                               child: Text(
-                                'SEM RESERVAS NESSE DIA',
+                                'NÃO POSSUI RESERVAS',
                                 style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,

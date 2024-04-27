@@ -28,7 +28,7 @@ class AuthController {
         'planoMeet': planoMeet,
       });
 
-      // sucesso(context, 'Verifique seu e-mail para ativar seu cadastro');
+      sucesso(context, 'Conta criada com sucesso');
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: ((c) {

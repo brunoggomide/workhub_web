@@ -112,7 +112,7 @@ class _EditProfileState extends State<EditProfile> {
                       String novoNome = txtNome.text;
                       String novoContato = txtContato.text;
 
-                      if (novoContato.isNotEmpty && novoContato.length >= 9) {
+                      if (novoNome.isNotEmpty && novoContato.length >= 9) {
                         var e = UsuarioModel(
                           AuthController().idUsuario(),
                           novoNome,
@@ -124,8 +124,7 @@ class _EditProfileState extends State<EditProfile> {
                         );
 
                         UserController().atualizar(context, widget.id, e);
-                        Navigator.of(context)
-                            .pop({'success': true, 'novoContato': novoContato});
+                        Navigator.of(context).pop();
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

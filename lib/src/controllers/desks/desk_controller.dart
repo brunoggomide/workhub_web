@@ -69,7 +69,7 @@ class DeskController {
     });
   }
 
-  contarMesas() async {
+  Future<int> contarMesas() async {
     var uidCoworking = AuthController().idUsuario();
     int totalMesas = 0;
 
@@ -80,7 +80,6 @@ class DeskController {
           .get();
 
       for (var doc in querySnapshot.docs) {
-        // Usar um cast para Map<String, dynamic>
         var data = doc.data() as Map<String, dynamic>;
         String numMesasStr = data['num_mesas'] ?? '0';
         int numMesas = int.tryParse(numMesasStr) ?? 0;
@@ -90,6 +89,6 @@ class DeskController {
       print('Erro ao contar mesas: $e');
     }
 
-    return totalMesas;
+    return totalMesas; // Ensure this is returning an int
   }
 }

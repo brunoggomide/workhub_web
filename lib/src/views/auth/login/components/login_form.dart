@@ -15,8 +15,8 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   var txtEmail = TextEditingController();
-
   var txtSenha = TextEditingController();
+  bool isObscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -37,11 +37,8 @@ class _LoginFormState extends State<LoginForm> {
             cursorColor: kPrimaryColor,
             onSaved: (email) {},
             decoration: const InputDecoration(
-              hintText: "Your email",
-              prefixIcon: Padding(
-                padding: EdgeInsets.all(defaultPadding),
-                child: Icon(Icons.person),
-              ),
+              hintText: "E-mail",
+              prefixIcon: Icon(Icons.email),
             ),
           ),
           Padding(
@@ -49,14 +46,20 @@ class _LoginFormState extends State<LoginForm> {
             child: TextFormField(
               controller: txtSenha,
               textInputAction: TextInputAction.done,
-              obscureText: true,
+              obscureText: isObscure,
               cursorColor: kPrimaryColor,
-              decoration: const InputDecoration(
-                hintText: "Your password",
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.lock),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isObscure = !isObscure;
+                    });
+                  },
+                  icon:
+                      Icon(isObscure ? Icons.visibility : Icons.visibility_off),
                 ),
+                hintText: "Senha",
               ),
             ),
           ),

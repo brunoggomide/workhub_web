@@ -57,6 +57,20 @@ class MeetingRoomController {
     return _meetingRooms.snapshots();
   }
 
+  Stream<int> contarSalas() {
+    var uidCoworking = AuthController().idUsuario();
+    try {
+      return FirebaseFirestore.instance
+          .collection('salas')
+          .where('UID_coworking', isEqualTo: uidCoworking)
+          .snapshots()
+          .map((snapshot) => snapshot.size);
+    } catch (e) {
+      print('Erro ao contar salas: $e');
+      throw e;
+    }
+  }
+
   Future<DocumentSnapshot> getMeetingRoom(String id) async {
     try {
       final DocumentSnapshot meetingRoom = await _meetingRooms.doc(id).get();

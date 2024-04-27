@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:workhub_web/src/views/plans/planPage.dart';
 
 import '../../../../controllers/auth/auth_controller.dart';
@@ -22,6 +23,21 @@ class _SignUpFormState extends State<SignUpForm> {
   var namePlan;
   var meetQtd;
   var deskQtd;
+  bool isObscure = true;
+
+  final celFormat = MaskTextInputFormatter(
+    mask: '(##)#####-####',
+    filter: {
+      '#': RegExp(r'[0-9]'),
+    },
+  );
+
+  final cnpjFormat = MaskTextInputFormatter(
+    mask: '##.###.###/####-##',
+    filter: {
+      '#': RegExp(r'[0-9]'),
+    },
+  );
 
   @override
   void initState() {
@@ -55,17 +71,17 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(
             height: 30,
           ),
-          TextFormField(
-            controller: txtNome,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            cursorColor: kPrimaryColor,
-            onSaved: (email) {},
-            decoration: const InputDecoration(
-              hintText: "Razão Social",
-              prefixIcon: Padding(
-                padding: EdgeInsets.all(defaultPadding),
-                child: Icon(Icons.person),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: defaultPadding),
+            child: TextFormField(
+              controller: txtNome,
+              keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
+              cursorColor: kPrimaryColor,
+              onSaved: (email) {},
+              decoration: const InputDecoration(
+                hintText: "Razão Social",
+                prefixIcon: Icon(Icons.person),
               ),
             ),
           ),
@@ -77,10 +93,7 @@ class _SignUpFormState extends State<SignUpForm> {
               cursorColor: kPrimaryColor,
               decoration: const InputDecoration(
                 hintText: "E-mail",
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.email),
-                ),
+                prefixIcon: Icon(Icons.email),
               ),
             ),
           ),
@@ -89,14 +102,20 @@ class _SignUpFormState extends State<SignUpForm> {
             child: TextFormField(
               controller: txtSenha,
               textInputAction: TextInputAction.done,
-              obscureText: true,
+              obscureText: isObscure,
               cursorColor: kPrimaryColor,
-              decoration: const InputDecoration(
-                hintText: "Senha",
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.lock),
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.lock),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      isObscure = !isObscure;
+                    });
+                  },
+                  icon:
+                      Icon(isObscure ? Icons.visibility : Icons.visibility_off),
                 ),
+                hintText: "Senha",
               ),
             ),
           ),
@@ -104,14 +123,12 @@ class _SignUpFormState extends State<SignUpForm> {
             padding: const EdgeInsets.symmetric(vertical: defaultPadding),
             child: TextFormField(
               controller: txtDocumento,
+              inputFormatters: [cnpjFormat],
               textInputAction: TextInputAction.done,
               cursorColor: kPrimaryColor,
               decoration: const InputDecoration(
                 hintText: "CNPJ",
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.business_center),
-                ),
+                prefixIcon: Icon(Icons.business_center),
               ),
             ),
           ),
@@ -119,14 +136,12 @@ class _SignUpFormState extends State<SignUpForm> {
             padding: const EdgeInsets.symmetric(vertical: defaultPadding),
             child: TextFormField(
               controller: txtContato,
+              inputFormatters: [celFormat],
               textInputAction: TextInputAction.done,
               cursorColor: kPrimaryColor,
               decoration: const InputDecoration(
                 hintText: "Contato",
-                prefixIcon: Padding(
-                  padding: EdgeInsets.all(defaultPadding),
-                  child: Icon(Icons.phone),
-                ),
+                prefixIcon: Icon(Icons.phone),
               ),
             ),
           ),
@@ -142,16 +157,16 @@ class _SignUpFormState extends State<SignUpForm> {
               if (nome.isNotEmpty &&
                   email.isNotEmpty &&
                   senha.isNotEmpty &&
-                  documento.isNotEmpty &&
-                  contato.isNotEmpty) {
+                  documento.length >= 18 &&
+                  contato.length >= 13) {
                 AuthController().criarConta(context, nome, email, senha,
                     documento, contato, namePlan, deskQtd, meetQtd);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     backgroundColor: Colors.red[300],
-                    content:
-                        const Text('Preencha todos os campos obrigatórios.'),
+                    content: const Text(
+                        'Preencha todos os campos obrigatórios corretamente.'),
                   ),
                 );
               }

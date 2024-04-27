@@ -4,7 +4,7 @@ import 'package:workhub_web/src/views/auth/signUp/signUpPage.dart';
 import 'package:workhub_web/src/views/utils/background.dart';
 
 class PlanPage extends StatefulWidget {
-  const PlanPage({Key? key}) : super(key: key);
+  const PlanPage({super.key});
 
   static Future<String?> getPlanName() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,7 +48,7 @@ class _PlanPageState extends State<PlanPage> {
               children: [
                 _buildPlanCard(
                   'Basic',
-                  'R\$ 39,90 por mês',
+                  'R\$ 69,90 por mês',
                   '5 salas de reuniões',
                   '10 posições de trabalho',
                   () {
@@ -65,7 +65,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
                 _buildPlanCard(
                   'Plus',
-                  'R\$ 45,90 por mês',
+                  'R\$ 74,90 por mês',
                   '10 salas de reuniões',
                   '20 posições de trabalho',
                   () {
@@ -82,7 +82,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
                 _buildPlanCard(
                   'Premium',
-                  'R\$ 49,90 por mês',
+                  'R\$ 79,90 por mês',
                   'Salas de reuniões ilimitadas',
                   'Posições de trabalho ilimitadas',
                   () {
@@ -106,7 +106,7 @@ class _PlanPageState extends State<PlanPage> {
               children: [
                 _buildPlanCard(
                   'Basic',
-                  '10x de R\$ 39,90',
+                  '10x de R\$ 69,90',
                   '5 salas de reuniões',
                   '10 posições de trabalho',
                   () {
@@ -123,7 +123,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
                 _buildPlanCard(
                   'Plus',
-                  '10x de R\$ 45,90',
+                  '10x de R\$ 74,90',
                   '10 salas de reuniões',
                   '20 posições de trabalho',
                   () {
@@ -140,7 +140,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
                 _buildPlanCard(
                   'Premium',
-                  '10x de R\$ 49,90',
+                  '10x de R\$ 79,90',
                   'Salas de reuniões ilimitadas',
                   'Posições de trabalho ilimitadas',
                   () {
