@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
 import '../../../../models/meeting_room_model.dart';
 import '../../../../services/cep.dart';
@@ -45,7 +43,6 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   final TextEditingController capacidadeController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
   final HourTextInputFormatter _hourFormatter = HourTextInputFormatter();
-  
 
   final ValueNotifier<bool> acessibilidadeController =
       ValueNotifier<bool>(false);
@@ -54,9 +51,8 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   final ValueNotifier<bool> projetorController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> quadroBrancoController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> tvController = ValueNotifier<bool>(false);
-  final ValueNotifier<bool> videoconferenciaController = ValueNotifier<bool>(false);
-
-  
+  final ValueNotifier<bool> videoconferenciaController =
+      ValueNotifier<bool>(false);
 
   final cepFormat = MaskTextInputFormatter(
     mask: '#####-###',
@@ -66,16 +62,14 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   );
 
   final List<File> _pickedImages = [];
-  final List<Uint8List> _pickedImagesWeb = [];
+  List<Uint8List> _pickedImagesWeb = [];
 
   DateTime? dtCriacao;
-
 
   @override
   void initState() {
     super.initState();
     loadMeetingRoom();
-    
   }
 
   void loadMeetingRoom() async {
@@ -97,12 +91,15 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
     valorController.text = data['valor'] ?? '';
     capacidadeController.text = data['capacidade'] ?? '';
     acessibilidadeController.value = data['acessibilidade'] ?? false;
-    arCondicionadoController.value = data['arCondicionado'] ?? false;
+    arCondicionadoController.value = data['ar_condicionado'] ?? false;
     projetorController.value = data['projetor'] ?? false;
-    quadroBrancoController.value = data['quadroBranco'] ?? false;
+    quadroBrancoController.value = data['quadro_branco'] ?? false;
     tvController.value = data['tv'] ?? false;
+    videoconferenciaController.value = data['videoconferencia'] ?? false;
 
-    
+    _pickedImagesWeb =
+        await meetingRoomController.downloadImages(data['fotos']);
+
     setState(() {});
   }
 
@@ -361,7 +358,6 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                                                       
                                     Row(
                                       children: [
                                         Flexible(
@@ -534,9 +530,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                         ),
                                       ],
                                     ),
-                                    
                                   ],
-                                  
                                 ),
                               ),
                               Expanded(
@@ -571,7 +565,6 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                             .asMap()
                                             .entries
                                             .map((entry) {
-                                          int index = entry.key;
                                           Uint8List image = entry.value;
                                           return Container(
                                             width: 100,
@@ -590,9 +583,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                                   onPressed: () {
                                                     setState(() {
                                                       _pickedImagesWeb
-                                                          .removeAt(index);
-                                                      _pickedImages
-                                                          .removeAt(index);
+                                                          .remove(image);
                                                     });
                                                   },
                                                 ),
@@ -634,8 +625,9 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                     ufController.text.isNotEmpty) {
                                   var meetingRoomController =
                                       MeetingRoomController();
-                                      
-                                  var meetingRoomAtualizado = _meetingRoom!.copyWith(
+
+                                  var meetingRoomAtualizado =
+                                      _meetingRoom!.copyWith(
                                     titulo: tituloController.text,
                                     valor: valorController.text,
                                     capacidade: capacidadeController.text,
@@ -643,7 +635,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                     endereco: logradouroController.text,
                                     num_endereco: numeroController.text,
                                     cidade: cidadeController.text,
-                                    uf: ufController.text,           // -------------- ADICIONAR EDIT DE FOTOSs
+                                    uf: ufController.text,
                                     bairro: bairroController.text,
                                     complemento: complementoController.text,
                                     descricao: descricaoController.text,
@@ -653,7 +645,8 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                         acessibilidadeController.value,
                                     projetor: projetorController.value,
                                     tv: tvController.value,
-                                    videoconferencia: videoconferenciaController.value,
+                                    videoconferencia:
+                                        videoconferenciaController.value,
                                     quadro_branco: quadroBrancoController.value,
                                     hr_abertura: aberturaController.text,
                                     hr_fechamento: fechamentoController.text,
@@ -664,7 +657,6 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                       meetingRoomAtualizado,
                                       _pickedImagesWeb,
                                       context);
-
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

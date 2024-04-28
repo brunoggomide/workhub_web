@@ -5,6 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:uuid/uuid.dart';
 import 'package:workhub_web/src/controllers/auth/auth_controller.dart';
 
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:http/http.dart' as http;
+
 import '../../models/meeting_room_model.dart';
 import '../../views/utils/env.dart';
 
@@ -81,8 +84,9 @@ class MeetingRoomController {
     }
   }
 
-  Future<void> updateMeetingRoom(String documentId, MeetingRoom meetingRoom,
+  Future<void> updateMeetingRoom(String meetingRoomId, MeetingRoom meetingRoom,
       List<Uint8List> imagens, context) async {
+    deleteMeetingRoomImages(meetingRoom.UID_coworking, meetingRoomId);
     List<String> imagePaths = [];
 
     for (Uint8List imagem in imagens) {
@@ -90,7 +94,7 @@ class MeetingRoomController {
       final imageName = Uuid().v1();
 
       final imagePath =
-          '/meeting_rooms_images/${meetingRoom.UID_coworking}/$documentId/$imageName.jpg';
+          '/meeting_rooms_images/${meetingRoom.UID_coworking}/$meetingRoomId/$imageName.jpg';
 
       final ref =
           firebase_storage.FirebaseStorage.instance.ref().child(imagePath);
@@ -112,7 +116,7 @@ class MeetingRoomController {
 
     FirebaseFirestore.instance
         .collection('salas')
-        .doc(documentId)
+        .doc(meetingRoomId)
         .update(meetingRoom.toJson())
         .then((value) =>
             sucesso(context, 'Sala de reunião atualizada com sucesso.'))
@@ -121,16 +125,57 @@ class MeetingRoomController {
         .whenComplete(() => Navigator.of(context).pop());
   }
 
-  Future<void> deleteMeetingRoom(String documentId) async {
+  Future<void> deleteMeetingRoom(
+      String uidCoworking, String meetingRoomId) async {
     try {
+      // Deleta as imagens da sala de reunião
+      await deleteMeetingRoomImages(uidCoworking, meetingRoomId);
+
+      // Deleta a sala de reunião
       await FirebaseFirestore.instance
           .collection('salas')
-          .doc(documentId)
-          .delete(); // -------------------------Lembrar de implementar exclusao de imagens no firestore dps
+          .doc(meetingRoomId)
+          .delete();
       print('Sala de reunião excluída com sucesso.');
     } catch (e) {
       print('Erro ao excluir a sala de reunião: $e');
       throw e;
     }
+  }
+
+  // Alternativa ao uso do Firebase Functions para deletar as imagens
+  Future<void> deleteMeetingRoomImages(
+      String uidCoworking, String roomId) async {
+    final storage = FirebaseStorage.instance;
+    final folderPath = 'meeting_rooms_images/$uidCoworking/$roomId';
+    print(folderPath);
+
+    final ListResult result = await storage.ref(folderPath).listAll();
+    print(result.items);
+
+    for (final Reference ref in result.items) {
+      await ref.delete();
+      print("imagem deletada");
+    }
+  }
+
+  Future<List<Uint8List>> downloadImages(List<String> imageUrls) async {
+    List<Uint8List> imageBytesList = [];
+
+    for (String imageUrl in imageUrls) {
+      try {
+        final http.Response response = await http.get(Uri.parse(imageUrl));
+        if (response.statusCode == 200) {
+          final Uint8List imageBytes = response.bodyBytes;
+          imageBytesList.add(imageBytes);
+        } else {
+          print('Erro ao baixar a imagem: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Erro ao baixar a imagem: $e');
+      }
+    }
+
+    return imageBytesList;
   }
 }

@@ -24,34 +24,35 @@ class MeetingRoom {
   final bool tv;
   final bool acessibilidade;
   final String? criado_em;
-  final String? atualizado_em;  // Excluir depois, nao precisa dessa variavel
+  final String? atualizado_em; // Excluir depois, nao precisa dessa variavel
   final String hr_abertura;
   final String hr_fechamento;
 
-  MeetingRoom(
-      {required this.UID_coworking,
-      required this.titulo,
-      required this.valor,
-      required this.capacidade,
-      required this.cep,
-      required this.endereco,
-      required this.num_endereco,
-      required this.cidade,
-      required this.uf,
-      required this.bairro,
-      required this.complemento,
-      required this.descricao,
-      this.fotos = const [],
-      required this.projetor,
-      required this.videoconferencia,
-      required this.ar_condicionado,
-      required this.quadro_branco,
-      required this.tv,
-      required this.acessibilidade,
-      this.criado_em,
-      required this.atualizado_em,
-      required this.hr_abertura,
-      required this.hr_fechamento,});
+  MeetingRoom({
+    required this.UID_coworking,
+    required this.titulo,
+    required this.valor,
+    required this.capacidade,
+    required this.cep,
+    required this.endereco,
+    required this.num_endereco,
+    required this.cidade,
+    required this.uf,
+    required this.bairro,
+    required this.complemento,
+    required this.descricao,
+    this.fotos = const [],
+    required this.projetor,
+    required this.videoconferencia,
+    required this.ar_condicionado,
+    required this.quadro_branco,
+    required this.tv,
+    required this.acessibilidade,
+    this.criado_em,
+    required this.atualizado_em,
+    required this.hr_abertura,
+    required this.hr_fechamento,
+  });
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> json = {
@@ -90,34 +91,34 @@ class MeetingRoom {
 
   factory MeetingRoom.fromJson(Map<String, dynamic> json) {
     return MeetingRoom(
-    UID_coworking: json['UID_coworking'] ?? '',
-    titulo: json['titulo'] ?? '',
-    valor: json['valor'] ?? '',
-    capacidade: json['capacidade'] ?? '',
-    cep: json['cep'] ?? '',
-    endereco: json['endereco'] ?? '',
-    num_endereco: json['num_endereco'] ?? '',
-    cidade: json['cidade'] ?? '',
-    uf: json['uf'] ?? '',
-    bairro: json['bairro'] ?? '',
-    complemento: json['complemento'] ?? '',
-    descricao: json['descricao'] ?? '',
-    fotos: List<String>.from(json['fotos'] ?? []),
-    projetor: json['projetor'] ?? false,
-    videoconferencia: json['videoconferencia'] ?? false,
-    ar_condicionado: json['ar_condicionado'] ?? false,
-    quadro_branco: json['quadro_branco'] ?? false,
-    tv: json['tv'] ?? false,
-    acessibilidade: json['acessibilidade'] ?? false,
-    criado_em: json['criado_em'] is Timestamp
-        ? (json['criado_em'] as Timestamp).toDate().toString()
-        : json['criado_em'] ?? '',
-    atualizado_em: json['atualizado_em'] is Timestamp
-        ? (json['atualizado_em'] as Timestamp).toDate().toString()
-        : json['atualizado_em'] ?? '',
-    hr_abertura: json['hr_abertura'] ?? '',
-    hr_fechamento: json['hr_fechamento'] ?? '',
-  );
+      UID_coworking: json['UID_coworking'] ?? '',
+      titulo: json['titulo'] ?? '',
+      valor: json['valor'] ?? '',
+      capacidade: json['capacidade'] ?? '',
+      cep: json['cep'] ?? '',
+      endereco: json['endereco'] ?? '',
+      num_endereco: json['num_endereco'] ?? '',
+      cidade: json['cidade'] ?? '',
+      uf: json['uf'] ?? '',
+      bairro: json['bairro'] ?? '',
+      complemento: json['complemento'] ?? '',
+      descricao: json['descricao'] ?? '',
+      fotos: List<String>.from(json['fotos'] ?? []),
+      projetor: json['projetor'] ?? false,
+      videoconferencia: json['videoconferencia'] ?? false,
+      ar_condicionado: json['ar_condicionado'] ?? false,
+      quadro_branco: json['quadro_branco'] ?? false,
+      tv: json['tv'] ?? false,
+      acessibilidade: json['acessibilidade'] ?? false,
+      criado_em: json['criado_em'] is Timestamp
+          ? (json['criado_em'] as Timestamp).toDate().toString()
+          : json['criado_em'] ?? '',
+      atualizado_em: json['atualizado_em'] is Timestamp
+          ? (json['atualizado_em'] as Timestamp).toDate().toString()
+          : json['atualizado_em'] ?? '',
+      hr_abertura: json['hr_abertura'] ?? '',
+      hr_fechamento: json['hr_fechamento'] ?? '',
+    );
   }
 
   MeetingRoom copyWith({

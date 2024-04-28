@@ -569,15 +569,20 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                                 ),
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(4),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
                                                     color: Colors.black54,
                                                   ),
                                                   child: IconButton(
-                                                    icon: Icon(Icons.close, color: Colors.white),
+                                                    icon: Icon(Icons.close,
+                                                        color: Colors.white),
                                                     onPressed: () {
                                                       setState(() {
-                                                        _pickedImagesWeb.removeAt(index);
-                                                        _pickedImages.removeAt(index);
+                                                        _pickedImagesWeb
+                                                            .removeAt(index);
+                                                        _pickedImages
+                                                            .removeAt(index);
                                                       });
                                                     },
                                                   ),
@@ -618,7 +623,6 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     bairroController.text.isNotEmpty &&
                                     cidadeController.text.isNotEmpty &&
                                     ufController.text.isNotEmpty) {
-                                  
                                   MeetingRoom meetingRoom = MeetingRoom(
                                     UID_coworking: AuthController().idUsuario(),
                                     titulo: tituloController.text,
@@ -628,24 +632,27 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     endereco: logradouroController.text,
                                     num_endereco: numeroController.text,
                                     cidade: cidadeController.text,
-                                    uf: ufController.text,         //  --------------------------- atualizar para fazer add com model
+                                    uf: ufController.text,
                                     bairro: bairroController.text,
                                     complemento: complementoController.text,
                                     descricao: descricaoController.text,
                                     fotos: [],
                                     projetor: projetorController.value,
-                                    videoconferencia: videoconferenciaController.value,
-                                    ar_condicionado: arCondicionadoController.value,
+                                    videoconferencia:
+                                        videoconferenciaController.value,
+                                    ar_condicionado:
+                                        arCondicionadoController.value,
                                     quadro_branco: quadroBrancoController.value,
                                     tv: tvController.value,
-                                    acessibilidade: acessibilidadeController.value,
+                                    acessibilidade:
+                                        acessibilidadeController.value,
                                     criado_em: DateTime.now().toString(),
                                     atualizado_em: DateTime.now().toString(),
                                     hr_abertura: aberturaController.text,
                                     hr_fechamento: fechamentoController.text,
                                   );
-                                  meetingRoomController.addMeetingRoom(meetingRoom, _pickedImagesWeb, context);
-
+                                  meetingRoomController.addMeetingRoom(
+                                      meetingRoom, _pickedImagesWeb, context);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

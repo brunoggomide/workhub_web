@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../controllers/meeting_room/meeting_room_controller.dart';
 import 'addMeetingRooms/components/add_meeting_room_form.dart';
@@ -158,6 +157,8 @@ class MeetingRoomsPage extends StatelessWidget {
                                                     barrierDismissible: false,
                                                     context: context,
                                                     builder: (_) {
+                                                      print(
+                                                          "page: id meeting room - ${document.id}");
                                                       return EditMeetingRoomForm(
                                                         documentId: document.id,
                                                       );
@@ -165,40 +166,46 @@ class MeetingRoomsPage extends StatelessWidget {
                                               },
                                             ),
                                             IconButton(
-                                              icon: const Icon(Icons.delete),
-                                              onPressed: () {
-                                                showDialog(
-                                                  context: context,
-                                                  builder: (context) {
-                                                    return AlertDialog(
-                                                      title: const Text(
-                                                          'Excluir sala de reunião'),
-                                                      content: const Text(
-                                                          'Tem certeza que deseja excluir essa sala de reunião?'),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            meetingRoomController
-                                                                .deleteMeetingRoom(
-                                                                    document.id);
-                                                            Navigator.of(context)
-                                                                .pop();
-                                                          },
-                                                          child: const Text('Sim'),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(context)
-                                                                .pop();
-                                                          },
-                                                          child: const Text('Não'),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              }
-                                            ),
+                                                icon: const Icon(Icons.delete),
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Excluir sala de reunião'),
+                                                        content: const Text(
+                                                            'Tem certeza que deseja excluir essa sala de reunião?'),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              meetingRoomController
+                                                                  .deleteMeetingRoom(
+                                                                data[
+                                                                    'UID_coworking'],
+                                                                document.id,
+                                                              );
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: const Text(
+                                                                'Sim'),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: const Text(
+                                                                'Não'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }),
                                           ],
                                         ),
                                       ),
