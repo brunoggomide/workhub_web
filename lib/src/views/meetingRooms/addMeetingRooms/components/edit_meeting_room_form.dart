@@ -12,7 +12,7 @@ import '../../../desks/components/moneyFormat.dart';
 import '../../../utils/timeFormat.dart';
 
 class EditMeetingRoomForm extends StatefulWidget {
-  final documentId;
+  final String documentId;
 
   const EditMeetingRoomForm({
     super.key,
@@ -127,7 +127,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                           const Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             child: Text(
-                              'Nova Sala de Reunião',
+                              'Editar Sala de Reunião',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -578,15 +578,24 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                                   width: double.infinity,
                                                   height: double.infinity,
                                                 ),
-                                                IconButton(
-                                                  icon: Icon(Icons.close),
-                                                  onPressed: () {
-                                                    setState(() {
-                                                      _pickedImagesWeb
-                                                          .remove(image);
-                                                    });
-                                                  },
-                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                    color: Colors.black54,
+                                                  ),
+                                                  child: IconButton(
+                                                    icon: Icon(Icons.close,
+                                                        color: Colors.white),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _pickedImagesWeb
+                                                            .remove(image);
+                                                      });
+                                                    },
+                                                  ),
+                                                )
                                               ],
                                             ),
                                           );

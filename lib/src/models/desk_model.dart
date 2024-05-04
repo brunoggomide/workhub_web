@@ -16,7 +16,6 @@ class Desk {
   final String bairro;
   final String complemento;
   final String descricao;
-  final List<Uint8List> imageFiles;
   List<String> fotos;
   final bool cafe;
   final bool estacionamento;
@@ -24,9 +23,9 @@ class Desk {
   final bool espaco_interativo;
   final bool bicicletario;
   final bool acessibilidade;
-  final String criado_em;
-  final String atualizado_em;
-  final bool status;
+  final String? criado_em;
+  final String? atualizado_em;
+  final bool status; /////////////// nao esquecer---------------------------
   final String hr_abertura;
   final String hr_fechamento;
 
@@ -43,7 +42,6 @@ class Desk {
       required this.bairro,
       required this.complemento,
       required this.descricao,
-      required this.imageFiles,
       this.fotos = const [],
       required this.cafe,
       required this.estacionamento,
@@ -51,7 +49,7 @@ class Desk {
       required this.espaco_interativo,
       required this.bicicletario,
       required this.acessibilidade,
-      required this.criado_em,
+      this.criado_em,
       required this.atualizado_em,
       required this.status,
       required this.hr_abertura,
@@ -84,7 +82,9 @@ class Desk {
       'hr_fechamento': hr_fechamento,
     };
 
-    if (criado_em != null && criado_em.isNotEmpty) {
+    if (criado_em != null) {
+      json['criado_em'] = criado_em;
+    } else {
       json['criado_em'] = FieldValue.serverTimestamp();
     }
 
@@ -105,7 +105,6 @@ class Desk {
       bairro: json['bairro'] ?? '',
       complemento: json['complemento'] ?? '',
       descricao: json['descricao'] ?? '',
-      imageFiles: [], // Inicialize imageFiles como uma lista vazia
       fotos: List<String>.from(json['fotos'] ?? []),
       cafe: json['cafe'] ?? false,
       estacionamento: json['estacionamento'] ?? false,
@@ -122,6 +121,60 @@ class Desk {
           : json['atualizado_em'] ?? '',
       hr_abertura: json['hr_abertura'] ?? '',
       hr_fechamento: json['hr_fechamento'] ?? '',
+    );
+  }
+
+  Desk copyWith({
+    String? UID_coworking,
+    String? titulo,
+    String? valor,
+    String? num_mesas,
+    String? cep,
+    String? endereco,
+    String? num_endereco,
+    String? cidade,
+    String? uf,
+    String? bairro,
+    String? complemento,
+    String? descricao,
+    List<String>? fotos,
+    bool? cafe,
+    bool? estacionamento,
+    bool? ar_condicionado,
+    bool? espaco_interativo,
+    bool? bicicletario,
+    bool? acessibilidade,
+    Timestamp? atualizado_em,
+    Timestamp? criado_em,
+    bool? status,
+    String? hr_abertura,
+    String? hr_fechamento,
+  }) {
+    return Desk(
+      UID_coworking: UID_coworking ?? this.UID_coworking,
+      titulo: titulo ?? this.titulo,
+      valor: valor ?? this.valor,
+      num_mesas: num_mesas ?? this.num_mesas,
+      cep: cep ?? this.cep,
+      endereco: endereco ?? this.endereco,
+      num_endereco: num_endereco ?? this.num_endereco,
+      cidade: cidade ?? this.cidade,
+      uf: uf ?? this.uf,
+      bairro: bairro ?? this.bairro,
+      complemento: complemento ?? this.complemento,
+      descricao: descricao ?? this.descricao,
+      fotos: fotos ?? this.fotos,
+      cafe: cafe ?? this.cafe,
+      estacionamento: estacionamento ?? this.estacionamento,
+      ar_condicionado: ar_condicionado ?? this.ar_condicionado,
+      espaco_interativo: espaco_interativo ?? this.espaco_interativo,
+      bicicletario: bicicletario ?? this.bicicletario,
+      acessibilidade: acessibilidade ?? this.acessibilidade,
+      atualizado_em: atualizado_em?.toDate().toString() ?? this.atualizado_em,
+      criado_em: criado_em?.toDate().toString() ?? this.criado_em,
+      status: status ?? this.status,
+      hr_abertura: hr_abertura ?? this.hr_abertura,
+      hr_fechamento: hr_fechamento ?? this.hr_fechamento,
     );
   }
 }

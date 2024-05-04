@@ -157,8 +157,6 @@ class MeetingRoomsPage extends StatelessWidget {
                                                     barrierDismissible: false,
                                                     context: context,
                                                     builder: (_) {
-                                                      print(
-                                                          "page: id meeting room - ${document.id}");
                                                       return EditMeetingRoomForm(
                                                         documentId: document.id,
                                                       );

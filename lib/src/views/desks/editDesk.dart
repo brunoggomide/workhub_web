@@ -12,26 +12,34 @@ import '../../services/cep.dart';
 import '../utils/timeFormat.dart';
 import 'components/moneyFormat.dart';
 
-class NewDesk extends StatefulWidget {
-  const NewDesk({Key? key}) : super(key: key);
+class EditDesk extends StatefulWidget {
+  final String id;
+
+  const EditDesk({
+    super.key,
+    required this.id,
+  });
 
   @override
-  _NewDeskState createState() => _NewDeskState();
+  _EditDeskState createState() => _EditDeskState();
 }
 
-class _NewDeskState extends State<NewDesk> {
+class _EditDeskState extends State<EditDesk> {
+  final DeskController deskController = DeskController();
+  Desk? _desk;
+
   final _formKey = GlobalKey<FormState>();
-  final _titleName = TextEditingController();
-  final _valueHour = TextEditingController();
-  final _numTables = TextEditingController();
+  final _tituloController = TextEditingController();
+  final _valorController = TextEditingController();
+  final _numMesasController = TextEditingController();
   final _cepController = TextEditingController();
   final _enderecoController = TextEditingController();
-  final _numAddress = TextEditingController();
+  final _numeroController = TextEditingController();
   final _cidadeController = TextEditingController();
-  final _estadoController = TextEditingController();
+  final _ufController = TextEditingController();
   final _bairroController = TextEditingController();
-  final _complementoAddress = TextEditingController();
-  final _description = TextEditingController();
+  final _complementoController = TextEditingController();
+  final _descricaoController = TextEditingController();
   final _aberturaController = TextEditingController();
   final _fechamentoController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
@@ -42,8 +50,9 @@ class _NewDeskState extends State<NewDesk> {
   bool espacoInterativo = false;
   bool bicicletario = false;
   bool acessibilidade = false;
-  final List<File> _pickedImages = [];
-  final List<Uint8List> _pickedImagesWeb = [];
+  bool status = true;
+  List<File> _pickedImages = [];
+  List<Uint8List> _pickedImagesWeb = [];
   final cepFormat = MaskTextInputFormatter(
     mask: '#####-###',
     filter: {
@@ -56,6 +65,41 @@ class _NewDeskState extends State<NewDesk> {
       '#': RegExp(r'[0-9]'),
     },
   );
+
+  @override
+  void initState() {
+    super.initState();
+    loadDesk();
+  }
+
+  void loadDesk() async {
+    _desk = await deskController.getDesk(widget.id);
+
+    var data = _desk!.toJson();
+    _cepController.text = data['cep'] ?? '';
+    _enderecoController.text = data['endereco'] ?? '';
+    _numeroController.text = data['num_endereco'] ?? '';
+    _bairroController.text = data['bairro'] ?? '';
+    _complementoController.text = data['complemento'] ?? '';
+    _cidadeController.text = data['cidade'] ?? '';
+    _ufController.text = data['uf'] ?? '';
+    _tituloController.text = data['titulo'] ?? '';
+    _aberturaController.text = data['hr_abertura'] ?? '';
+    _fechamentoController.text = data['hr_fechamento'] ?? '';
+    _descricaoController.text = data['descricao'] ?? '';
+    _valorController.text = data['valor'] ?? '';
+    _numMesasController.text = data['num_mesas'] ?? '';
+    acessibilidade = data['acessibilidade'] ?? false;
+    arCondicionado = data['ar_condicionado'] ?? false;
+    espacoInterativo = data['espaco_interativo'] ?? false;
+    bicicletario = data['bicicletario'] ?? false;
+    cafe = data['cafe'] ?? false;
+    estacionamento = data['estacionamento'] ?? false;
+
+    _pickedImagesWeb = await deskController.downloadImages(data['fotos']);
+
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +125,7 @@ class _NewDeskState extends State<NewDesk> {
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
                           child: Text(
-                            'Nova Mesa',
+                            'Editar Mesa',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -95,7 +139,7 @@ class _NewDeskState extends State<NewDesk> {
                             Expanded(
                               flex: 3,
                               child: TextFormField(
-                                controller: _titleName,
+                                controller: _tituloController,
                                 decoration: InputDecoration(
                                   labelText: 'Nome da Posição',
                                   isDense: true,
@@ -138,7 +182,7 @@ class _NewDeskState extends State<NewDesk> {
                             const SizedBox(width: 12.0),
                             Expanded(
                               child: TextFormField(
-                                controller: _valueHour,
+                                controller: _valorController,
                                 inputFormatters: [_moneyFormatter],
                                 decoration: InputDecoration(
                                   labelText: 'Valor da Hora',
@@ -152,7 +196,7 @@ class _NewDeskState extends State<NewDesk> {
                             SizedBox(width: 12.0),
                             Expanded(
                               child: TextFormField(
-                                controller: _numTables,
+                                controller: _numMesasController,
                                 inputFormatters: [deskFormat],
                                 decoration: InputDecoration(
                                   labelText: 'Mesas',
@@ -181,7 +225,7 @@ class _NewDeskState extends State<NewDesk> {
                                             address['logradouro'] ?? '';
                                         _cidadeController.text =
                                             address['localidade'] ?? '';
-                                        _estadoController.text =
+                                        _ufController.text =
                                             address['uf'] ?? '';
                                         _bairroController.text =
                                             address['bairro'] ?? '';
@@ -220,7 +264,7 @@ class _NewDeskState extends State<NewDesk> {
                             Expanded(
                               flex: 1,
                               child: TextFormField(
-                                controller: _numAddress,
+                                controller: _numeroController,
                                 decoration: InputDecoration(
                                   labelText: 'Número',
                                   isDense: true,
@@ -253,7 +297,7 @@ class _NewDeskState extends State<NewDesk> {
                             Expanded(
                               flex: 1,
                               child: TextFormField(
-                                controller: _estadoController,
+                                controller: _ufController,
                                 enabled: false,
                                 decoration: InputDecoration(
                                   labelText: 'Estado',
@@ -286,7 +330,7 @@ class _NewDeskState extends State<NewDesk> {
                             Expanded(
                               flex: 2,
                               child: TextFormField(
-                                controller: _complementoAddress,
+                                controller: _complementoController,
                                 decoration: InputDecoration(
                                   labelText: 'Complemento',
                                   isDense: true,
@@ -300,7 +344,7 @@ class _NewDeskState extends State<NewDesk> {
                         ),
                         SizedBox(height: 12.0),
                         TextFormField(
-                          controller: _description,
+                          controller: _descricaoController,
                           maxLines: 3,
                           decoration: InputDecoration(
                             labelText: 'Descrição',
@@ -515,7 +559,6 @@ class _NewDeskState extends State<NewDesk> {
                                           .asMap()
                                           .entries
                                           .map((entry) {
-                                        int index = entry.key;
                                         Uint8List image = entry.value;
                                         return Container(
                                           width: 100,
@@ -541,9 +584,7 @@ class _NewDeskState extends State<NewDesk> {
                                                   onPressed: () {
                                                     setState(() {
                                                       _pickedImagesWeb
-                                                          .removeAt(index);
-                                                      _pickedImages
-                                                          .removeAt(index);
+                                                          .remove(image);
                                                     });
                                                   },
                                                 ),
@@ -572,30 +613,30 @@ class _NewDeskState extends State<NewDesk> {
                                     color: Color.fromRGBO(177, 47, 47, 1)),
                               ),
                               onPressed: () {
-                                if (_titleName.text.isNotEmpty &&
-                                    _valueHour.text.isNotEmpty &&
-                                    _numTables.text.isNotEmpty &&
+                                if (_tituloController.text.isNotEmpty &&
+                                    _valorController.text.isNotEmpty &&
+                                    _numMesasController.text.isNotEmpty &&
                                     _cepController.text.isNotEmpty &&
                                     _enderecoController.text.isNotEmpty &&
-                                    _numAddress.text.isNotEmpty &&
+                                    _numeroController.text.isNotEmpty &&
                                     _cidadeController.text.isNotEmpty &&
-                                    _estadoController.text.isNotEmpty &&
+                                    _ufController.text.isNotEmpty &&
                                     _bairroController.text.isNotEmpty &&
-                                    _description.text.isNotEmpty &&
+                                    _descricaoController.text.isNotEmpty &&
                                     _pickedImagesWeb.isNotEmpty) {
                                   var d = Desk(
                                     UID_coworking: AuthController().idUsuario(),
-                                    titulo: _titleName.text,
-                                    valor: _valueHour.text,
-                                    num_mesas: _numTables.text,
+                                    titulo: _tituloController.text,
+                                    valor: _valorController.text,
+                                    num_mesas: _numMesasController.text,
                                     cep: _cepController.text,
                                     endereco: _enderecoController.text,
-                                    num_endereco: _numAddress.text,
+                                    num_endereco: _numeroController.text,
                                     cidade: _cidadeController.text,
-                                    uf: _estadoController.text,
+                                    uf: _ufController.text,
                                     bairro: _bairroController.text,
-                                    complemento: _complementoAddress.text,
-                                    descricao: _description.text,
+                                    complemento: _complementoController.text,
+                                    descricao: _descricaoController.text,
                                     cafe: cafe,
                                     estacionamento: estacionamento,
                                     ar_condicionado: arCondicionado,
@@ -608,8 +649,8 @@ class _NewDeskState extends State<NewDesk> {
                                     hr_abertura: _aberturaController.text,
                                     hr_fechamento: _fechamentoController.text,
                                   );
-                                  DeskController()
-                                      .addDesk(d, _pickedImagesWeb, context);
+                                  deskController.updateDesk(
+                                      widget.id, d, _pickedImagesWeb, context);
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(

@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:workhub_web/src/views/desks/editDesk.dart';
 import 'package:workhub_web/src/views/desks/newDesk.dart';
 
 import '../../controllers/desks/desk_controller.dart';
 import '../../models/desk_model.dart';
 
 class Desks extends StatelessWidget {
-  final DeskController meetingRoomController = DeskController();
+  final DeskController deskController = DeskController();
 
   Desks({Key? key}) : super(key: key);
 
@@ -49,12 +50,11 @@ class Desks extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
                   children: [
-                    StreamBuilder<List<Desk>>(
-                      stream: meetingRoomController.listar(),
+                    StreamBuilder<QuerySnapshot>(
+                      stream: deskController.getDesks(),
                       builder: (BuildContext context,
-                          AsyncSnapshot<List<Desk>> snapshot) {
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
-                          print(snapshot.error);
                           return const Text(
                             'Algo deu errado',
                             style: TextStyle(
@@ -136,18 +136,78 @@ class Desks extends StatelessWidget {
                                   ),
                                 )
                               ],
-                              rows: snapshot.data!.map((Desk desk) {
+                              rows: snapshot.data!.docs
+                                  .map((DocumentSnapshot document) {
+                                Map<String, dynamic> data =
+                                    document.data() as Map<String, dynamic>;
                                 return DataRow(
                                   cells: <DataCell>[
-                                    DataCell(Text(desk.titulo)),
-                                    DataCell(Text("R\$${desk.valor}")),
-                                    DataCell(Text(desk.endereco)),
-                                    DataCell(Text(desk.hr_abertura)),
-                                    DataCell(Text(desk.hr_fechamento)),
+                                    DataCell(Text(data['titulo'] ?? '')),
+                                    DataCell(Text("R\$${data['valor']}")),
+                                    DataCell(Text(data['endereco'] ?? '')),
+                                    DataCell(Text(data['hr_abertura'] ?? '')),
+                                    DataCell(Text(data['hr_fechamento'] ?? '')),
                                     DataCell(
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {},
+                                      Container(
+                                        width: 100,
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              icon: const Icon(Icons.edit),
+                                              onPressed: () {
+                                                showDialog(
+                                                    barrierDismissible: false,
+                                                    context: context,
+                                                    builder: (_) {
+                                                      return EditDesk(
+                                                        id: document.id,
+                                                      );
+                                                    });
+                                              },
+                                            ),
+                                            IconButton(
+                                                icon: const Icon(Icons.delete),
+                                                onPressed: () {
+                                                  showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return AlertDialog(
+                                                        title: const Text(
+                                                            'Excluir mesa'),
+                                                        content: const Text(
+                                                            'Tem certeza que deseja excluir essa mesa?'),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              deskController
+                                                                  .deleteDesk(
+                                                                data[
+                                                                    'UID_coworking'],
+                                                                document.id,
+                                                              );
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: const Text(
+                                                                'Sim'),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: const Text(
+                                                                'Não'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                }),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ],

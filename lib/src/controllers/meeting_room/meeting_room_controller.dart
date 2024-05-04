@@ -46,8 +46,7 @@ class MeetingRoomController {
 
     meetingRoom.fotos = imagePaths;
 
-    FirebaseFirestore.instance
-        .collection('salas')
+    _meetingRooms
         .add(meetingRoom.toJson())
         .then((value) =>
             sucesso(context, 'Sala de reunião adicionada com sucesso.'))
