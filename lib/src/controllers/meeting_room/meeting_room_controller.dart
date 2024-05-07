@@ -56,7 +56,9 @@ class MeetingRoomController {
   }
 
   Stream<QuerySnapshot> getMeetingRooms() {
-    return _meetingRooms.snapshots();
+    return _meetingRooms
+        .where('UID_coworking', isEqualTo: AuthController().idUsuario())
+        .snapshots();
   }
 
   Stream<int> contarSalas() {

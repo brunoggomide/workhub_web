@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:workhub_web/src/controllers/auth/auth_controller.dart';
+import 'package:workhub_web/src/controllers/user/user_controller.dart';
 import 'package:workhub_web/src/views/desks/editDesk.dart';
 import 'package:workhub_web/src/views/desks/newDesk.dart';
 
 import '../../controllers/desks/desk_controller.dart';
-import '../../models/desk_model.dart';
 
 class Desks extends StatelessWidget {
   final DeskController deskController = DeskController();
@@ -25,13 +25,25 @@ class Desks extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: RawMaterialButton(
-                    onPressed: () {
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) {
-                            return const NewDesk();
-                          });
+                    onPressed: () async {
+                      int numMesas = await DeskController().contarMesas();
+                      dynamic planDesk = await UserController().getPlanDesk();
+                      if (numMesas < planDesk) {
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (_) {
+                              return const NewDesk();
+                            });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red[300],
+                            content: const Text(
+                                'Você atingiu o limite de cadastros de mesas do seu plano.'),
+                          ),
+                        );
+                      }
                     },
                     fillColor: const Color.fromARGB(255, 232, 236, 239),
                     shape: RoundedRectangleBorder(

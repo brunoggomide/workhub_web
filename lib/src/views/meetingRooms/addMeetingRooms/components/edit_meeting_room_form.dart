@@ -250,8 +250,12 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 flex: 4,
                                 child: TextFormField(
                                   controller: logradouroController,
+                                  enabled: cepController.text.isNotEmpty &&
+                                          logradouroController.text.isEmpty
+                                      ? true
+                                      : false,
                                   decoration: InputDecoration(
-                                    labelText: 'Logradouro',
+                                    labelText: 'Endereço',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(2),
@@ -313,6 +317,10 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 flex: 2,
                                 child: TextFormField(
                                   controller: bairroController,
+                                  enabled: cepController.text.isNotEmpty &&
+                                          bairroController.text.isEmpty
+                                      ? true
+                                      : false,
                                   decoration: InputDecoration(
                                     labelText: 'Bairro',
                                     isDense: true,

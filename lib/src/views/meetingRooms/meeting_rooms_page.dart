@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../controllers/meeting_room/meeting_room_controller.dart';
+import '../../controllers/user/user_controller.dart';
 import 'addMeetingRooms/components/add_meeting_room_form.dart';
 import 'addMeetingRooms/components/edit_meeting_room_form.dart';
 
@@ -23,13 +24,30 @@ class MeetingRoomsPage extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: RawMaterialButton(
-                    onPressed: () {
-                      showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (_) {
-                            return const AddMeetingRoomForm();
-                          });
+                    onPressed: () async {
+                      var numRoomStream = MeetingRoomController().contarSalas();
+                      dynamic roomPlan = await UserController().getPlanMeet();
+
+                      numRoomStream.listen((numRooms) {
+                        if (numRooms < roomPlan) {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (_) {
+                                return const AddMeetingRoomForm();
+                              });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.red[300],
+                              content: const Text(
+                                  'Você atingiu o limite de cadastros de salas do seu plano.'),
+                            ),
+                          );
+                        }
+                      }, onError: (e) {
+                        print('Erro ao receber número de salas: $e');
+                      });
                     },
                     fillColor: const Color.fromARGB(255, 232, 236, 239),
                     shape: RoundedRectangleBorder(

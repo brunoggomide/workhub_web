@@ -8,6 +8,7 @@ import 'package:workhub_web/src/controllers/desks/desk_controller.dart';
 import 'package:workhub_web/src/models/desk_model.dart';
 
 import '../../controllers/auth/auth_controller.dart';
+import '../../controllers/user/user_controller.dart';
 import '../../services/cep.dart';
 import '../utils/timeFormat.dart';
 import 'components/moneyFormat.dart';
@@ -28,7 +29,6 @@ class _EditDeskState extends State<EditDesk> {
   final DeskController deskController = DeskController();
   Desk? _desk;
 
-  final _formKey = GlobalKey<FormState>();
   final _tituloController = TextEditingController();
   final _valorController = TextEditingController();
   final _numMesasController = TextEditingController();
@@ -44,6 +44,7 @@ class _EditDeskState extends State<EditDesk> {
   final _fechamentoController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
   final HourTextInputFormatter _hourFormatter = HourTextInputFormatter();
+  var numMesasNow;
   bool cafe = false;
   bool estacionamento = false;
   bool arCondicionado = false;
@@ -98,6 +99,7 @@ class _EditDeskState extends State<EditDesk> {
 
     _pickedImagesWeb = await deskController.downloadImages(data['fotos']);
 
+    numMesasNow = data['num_mesas'];
     setState(() {});
   }
 
@@ -612,54 +614,75 @@ class _EditDeskState extends State<EditDesk> {
                                     width: 2,
                                     color: Color.fromRGBO(177, 47, 47, 1)),
                               ),
-                              onPressed: () {
-                                if (_tituloController.text.isNotEmpty &&
-                                    _valorController.text.isNotEmpty &&
-                                    _numMesasController.text.isNotEmpty &&
-                                    _cepController.text.isNotEmpty &&
-                                    _enderecoController.text.isNotEmpty &&
-                                    _numeroController.text.isNotEmpty &&
-                                    _cidadeController.text.isNotEmpty &&
-                                    _ufController.text.isNotEmpty &&
-                                    _bairroController.text.isNotEmpty &&
-                                    _descricaoController.text.isNotEmpty &&
-                                    _pickedImagesWeb.isNotEmpty) {
-                                  var d = Desk(
-                                    UID_coworking: AuthController().idUsuario(),
-                                    titulo: _tituloController.text,
-                                    valor: _valorController.text,
-                                    num_mesas: _numMesasController.text,
-                                    cep: _cepController.text,
-                                    endereco: _enderecoController.text,
-                                    num_endereco: _numeroController.text,
-                                    cidade: _cidadeController.text,
-                                    uf: _ufController.text,
-                                    bairro: _bairroController.text,
-                                    complemento: _complementoController.text,
-                                    descricao: _descricaoController.text,
-                                    cafe: cafe,
-                                    estacionamento: estacionamento,
-                                    ar_condicionado: arCondicionado,
-                                    espaco_interativo: espacoInterativo,
-                                    bicicletario: bicicletario,
-                                    acessibilidade: acessibilidade,
-                                    criado_em: DateTime.now().toString(),
-                                    atualizado_em: DateTime.now().toString(),
-                                    status: true,
-                                    hr_abertura: _aberturaController.text,
-                                    hr_fechamento: _fechamentoController.text,
-                                  );
-                                  deskController.updateDesk(
-                                      widget.id, d, _pickedImagesWeb, context);
+                              onPressed: () async {
+                                int numMesas =
+                                    await DeskController().contarMesas();
+                                dynamic planDesk =
+                                    await UserController().getPlanDesk();
+                                String inputText = _numMesasController.text;
+                                int additionalMesas = int.parse(inputText);
+                                int mesasNow = int.parse(numMesasNow);
+
+                                var mesas =
+                                    numMesas + additionalMesas - mesasNow;
+                                if (mesas <= planDesk) {
+                                  if (_tituloController.text.isNotEmpty &&
+                                      _valorController.text.isNotEmpty &&
+                                      _numMesasController.text.isNotEmpty &&
+                                      _cepController.text.isNotEmpty &&
+                                      _enderecoController.text.isNotEmpty &&
+                                      _numeroController.text.isNotEmpty &&
+                                      _cidadeController.text.isNotEmpty &&
+                                      _ufController.text.isNotEmpty &&
+                                      _bairroController.text.isNotEmpty &&
+                                      _descricaoController.text.isNotEmpty &&
+                                      _pickedImagesWeb.isNotEmpty) {
+                                    var d = Desk(
+                                      UID_coworking:
+                                          AuthController().idUsuario(),
+                                      titulo: _tituloController.text,
+                                      valor: _valorController.text,
+                                      num_mesas: _numMesasController.text,
+                                      cep: _cepController.text,
+                                      endereco: _enderecoController.text,
+                                      num_endereco: _numeroController.text,
+                                      cidade: _cidadeController.text,
+                                      uf: _ufController.text,
+                                      bairro: _bairroController.text,
+                                      complemento: _complementoController.text,
+                                      descricao: _descricaoController.text,
+                                      cafe: cafe,
+                                      estacionamento: estacionamento,
+                                      ar_condicionado: arCondicionado,
+                                      espaco_interativo: espacoInterativo,
+                                      bicicletario: bicicletario,
+                                      acessibilidade: acessibilidade,
+                                      criado_em: DateTime.now().toString(),
+                                      atualizado_em: DateTime.now().toString(),
+                                      status: true,
+                                      hr_abertura: _aberturaController.text,
+                                      hr_fechamento: _fechamentoController.text,
+                                    );
+                                    deskController.updateDesk(widget.id, d,
+                                        _pickedImagesWeb, context);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Colors.red[300],
+                                        content: const Text(
+                                          'Preencha todos os campos',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        duration: const Duration(seconds: 3),
+                                      ),
+                                    );
+                                  }
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.red[300],
                                       content: const Text(
-                                        'Preencha todos os campos',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      duration: const Duration(seconds: 3),
+                                          'Você ultrapassou o limite de cadastros de mesas do seu plano.'),
                                     ),
                                   );
                                 }

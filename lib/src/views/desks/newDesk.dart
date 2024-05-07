@@ -8,6 +8,7 @@ import 'package:workhub_web/src/controllers/desks/desk_controller.dart';
 import 'package:workhub_web/src/models/desk_model.dart';
 
 import '../../controllers/auth/auth_controller.dart';
+import '../../controllers/user/user_controller.dart';
 import '../../services/cep.dart';
 import '../utils/timeFormat.dart';
 import 'components/moneyFormat.dart';
@@ -20,7 +21,6 @@ class NewDesk extends StatefulWidget {
 }
 
 class _NewDeskState extends State<NewDesk> {
-  final _formKey = GlobalKey<FormState>();
   final _titleName = TextEditingController();
   final _valueHour = TextEditingController();
   final _numTables = TextEditingController();
@@ -571,54 +571,72 @@ class _NewDeskState extends State<NewDesk> {
                                     width: 2,
                                     color: Color.fromRGBO(177, 47, 47, 1)),
                               ),
-                              onPressed: () {
-                                if (_titleName.text.isNotEmpty &&
-                                    _valueHour.text.isNotEmpty &&
-                                    _numTables.text.isNotEmpty &&
-                                    _cepController.text.isNotEmpty &&
-                                    _enderecoController.text.isNotEmpty &&
-                                    _numAddress.text.isNotEmpty &&
-                                    _cidadeController.text.isNotEmpty &&
-                                    _estadoController.text.isNotEmpty &&
-                                    _bairroController.text.isNotEmpty &&
-                                    _description.text.isNotEmpty &&
-                                    _pickedImagesWeb.isNotEmpty) {
-                                  var d = Desk(
-                                    UID_coworking: AuthController().idUsuario(),
-                                    titulo: _titleName.text,
-                                    valor: _valueHour.text,
-                                    num_mesas: _numTables.text,
-                                    cep: _cepController.text,
-                                    endereco: _enderecoController.text,
-                                    num_endereco: _numAddress.text,
-                                    cidade: _cidadeController.text,
-                                    uf: _estadoController.text,
-                                    bairro: _bairroController.text,
-                                    complemento: _complementoAddress.text,
-                                    descricao: _description.text,
-                                    cafe: cafe,
-                                    estacionamento: estacionamento,
-                                    ar_condicionado: arCondicionado,
-                                    espaco_interativo: espacoInterativo,
-                                    bicicletario: bicicletario,
-                                    acessibilidade: acessibilidade,
-                                    criado_em: DateTime.now().toString(),
-                                    atualizado_em: DateTime.now().toString(),
-                                    status: true,
-                                    hr_abertura: _aberturaController.text,
-                                    hr_fechamento: _fechamentoController.text,
-                                  );
-                                  DeskController()
-                                      .addDesk(d, _pickedImagesWeb, context);
+                              onPressed: () async {
+                                int numMesas =
+                                    await DeskController().contarMesas();
+                                dynamic planDesk =
+                                    await UserController().getPlanDesk();
+                                String inputText = _numTables.text;
+                                int additionalMesas = int.parse(inputText);
+                                var mesas = numMesas + additionalMesas;
+                                if (mesas <= planDesk) {
+                                  if (_titleName.text.isNotEmpty &&
+                                      _valueHour.text.isNotEmpty &&
+                                      _numTables.text.isNotEmpty &&
+                                      _cepController.text.isNotEmpty &&
+                                      _enderecoController.text.isNotEmpty &&
+                                      _numAddress.text.isNotEmpty &&
+                                      _cidadeController.text.isNotEmpty &&
+                                      _estadoController.text.isNotEmpty &&
+                                      _bairroController.text.isNotEmpty &&
+                                      _description.text.isNotEmpty &&
+                                      _pickedImagesWeb.isNotEmpty) {
+                                    var d = Desk(
+                                      UID_coworking:
+                                          AuthController().idUsuario(),
+                                      titulo: _titleName.text,
+                                      valor: _valueHour.text,
+                                      num_mesas: _numTables.text,
+                                      cep: _cepController.text,
+                                      endereco: _enderecoController.text,
+                                      num_endereco: _numAddress.text,
+                                      cidade: _cidadeController.text,
+                                      uf: _estadoController.text,
+                                      bairro: _bairroController.text,
+                                      complemento: _complementoAddress.text,
+                                      descricao: _description.text,
+                                      cafe: cafe,
+                                      estacionamento: estacionamento,
+                                      ar_condicionado: arCondicionado,
+                                      espaco_interativo: espacoInterativo,
+                                      bicicletario: bicicletario,
+                                      acessibilidade: acessibilidade,
+                                      criado_em: DateTime.now().toString(),
+                                      atualizado_em: DateTime.now().toString(),
+                                      status: true,
+                                      hr_abertura: _aberturaController.text,
+                                      hr_fechamento: _fechamentoController.text,
+                                    );
+                                    DeskController()
+                                        .addDesk(d, _pickedImagesWeb, context);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Colors.red[300],
+                                        content: const Text(
+                                          'Preencha todos os campos',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        duration: const Duration(seconds: 3),
+                                      ),
+                                    );
+                                  }
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       backgroundColor: Colors.red[300],
                                       content: const Text(
-                                        'Preencha todos os campos',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      duration: const Duration(seconds: 3),
+                                          'Você ultrapassou o limite de cadastros de mesas do seu plano.'),
                                     ),
                                   );
                                 }

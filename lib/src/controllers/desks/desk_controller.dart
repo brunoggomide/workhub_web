@@ -61,18 +61,10 @@ class DeskController {
         .whenComplete(() => Navigator.of(context).pop());
   }*/
 
-  listar() {
-    return FirebaseFirestore.instance
-        .collection('mesas')
-        .where('UID_coworking', isEqualTo: AuthController().idUsuario())
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => Desk.fromJson(doc.data())).toList();
-    });
-  }
-
   Stream<QuerySnapshot> getDesks() {
-    return _desks.snapshots();
+    return _desks
+        .where('UID_coworking', isEqualTo: AuthController().idUsuario())
+        .snapshots();
   }
 
   Future<int> contarMesas() async {

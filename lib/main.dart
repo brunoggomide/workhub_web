@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:workhub_web/src/views/auth/login/loginPage.dart';
-import 'package:workhub_web/src/views/auth/signUp/signUpPage.dart';
-import 'package:workhub_web/src/views/base/sideBar.dart';
 import 'package:workhub_web/src/views/homepage/homepage.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
