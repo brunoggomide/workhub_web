@@ -61,6 +61,13 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
     },
   );
 
+  final capacidadeFormat = MaskTextInputFormatter(
+    mask: '####',
+    filter: {
+      '#': RegExp(r'[0-9]'),
+    },
+  );
+
   final List<File> _pickedImages = [];
   List<Uint8List> _pickedImagesWeb = [];
 
@@ -101,6 +108,18 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
         await meetingRoomController.downloadImages(data['fotos']);
 
     setState(() {});
+  }
+
+  Future<void> _selectTime(
+      BuildContext context, TextEditingController controller) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      controller.text = picked.format(context);
+      setState(() {});
+    }
   }
 
   @override
@@ -156,13 +175,16 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 flex: 1,
                                 child: TextFormField(
                                   controller: aberturaController,
-                                  inputFormatters: [_hourFormatter],
+                                  readOnly: true,
+                                  onTap: () =>
+                                      _selectTime(context, aberturaController),
                                   decoration: InputDecoration(
                                     labelText: 'Abertura',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(2),
                                     ),
+                                    suffixIcon: Icon(Icons.access_time),
                                   ),
                                 ),
                               ),
@@ -171,13 +193,16 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 flex: 1,
                                 child: TextFormField(
                                   controller: fechamentoController,
-                                  inputFormatters: [_hourFormatter],
+                                  readOnly: true,
+                                  onTap: () => _selectTime(
+                                      context, fechamentoController),
                                   decoration: InputDecoration(
                                     labelText: 'Fechamento',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(2),
                                     ),
+                                    suffixIcon: Icon(Icons.access_time),
                                   ),
                                 ),
                               ),
@@ -201,6 +226,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 flex: 1,
                                 child: TextFormField(
                                   controller: capacidadeController,
+                                  inputFormatters: [capacidadeFormat],
                                   decoration: InputDecoration(
                                     labelText: 'Capacidade',
                                     isDense: true,

@@ -57,6 +57,18 @@ class _NewDeskState extends State<NewDesk> {
     },
   );
 
+  Future<void> _selectTime(
+      BuildContext context, TextEditingController controller) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      controller.text = picked.format(context);
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -110,13 +122,16 @@ class _NewDeskState extends State<NewDesk> {
                               flex: 1,
                               child: TextFormField(
                                 controller: _aberturaController,
-                                inputFormatters: [_hourFormatter],
+                                readOnly: true,
+                                onTap: () =>
+                                    _selectTime(context, _aberturaController),
                                 decoration: InputDecoration(
                                   labelText: 'Abertura',
                                   isDense: true,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(2),
                                   ),
+                                  suffixIcon: Icon(Icons.access_time),
                                 ),
                               ),
                             ),
@@ -125,13 +140,16 @@ class _NewDeskState extends State<NewDesk> {
                               flex: 1,
                               child: TextFormField(
                                 controller: _fechamentoController,
-                                inputFormatters: [_hourFormatter],
+                                readOnly: true,
+                                onTap: () =>
+                                    _selectTime(context, _fechamentoController),
                                 decoration: InputDecoration(
                                   labelText: 'Fechamento',
                                   isDense: true,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(2),
                                   ),
+                                  suffixIcon: Icon(Icons.access_time),
                                 ),
                               ),
                             ),
@@ -579,6 +597,9 @@ class _NewDeskState extends State<NewDesk> {
                                 String inputText = _numTables.text;
                                 int additionalMesas = int.parse(inputText);
                                 var mesas = numMesas + additionalMesas;
+                                String horaAbertura = _aberturaController.text;
+                                String horaFechamento =
+                                    _fechamentoController.text;
                                 if (mesas <= planDesk) {
                                   if (_titleName.text.isNotEmpty &&
                                       _valueHour.text.isNotEmpty &&
@@ -590,33 +611,48 @@ class _NewDeskState extends State<NewDesk> {
                                       _estadoController.text.isNotEmpty &&
                                       _bairroController.text.isNotEmpty &&
                                       _description.text.isNotEmpty) {
-                                    var d = Desk(
-                                      UID_coworking:
-                                          AuthController().idUsuario(),
-                                      titulo: _titleName.text,
-                                      valor: _valueHour.text,
-                                      num_mesas: _numTables.text,
-                                      cep: _cepController.text,
-                                      endereco: _enderecoController.text,
-                                      num_endereco: _numAddress.text,
-                                      cidade: _cidadeController.text,
-                                      uf: _estadoController.text,
-                                      bairro: _bairroController.text,
-                                      complemento: _complementoAddress.text,
-                                      descricao: _description.text,
-                                      cafe: cafe,
-                                      estacionamento: estacionamento,
-                                      ar_condicionado: arCondicionado,
-                                      espaco_interativo: espacoInterativo,
-                                      bicicletario: bicicletario,
-                                      acessibilidade: acessibilidade,
-                                      criado_em: DateTime.now().toString(),
-                                      atualizado_em: DateTime.now().toString(),
-                                      hr_abertura: _aberturaController.text,
-                                      hr_fechamento: _fechamentoController.text,
-                                    );
-                                    DeskController()
-                                        .addDesk(d, _pickedImagesWeb, context);
+                                    if (horaFechamento.compareTo(horaAbertura) <
+                                        0) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(
+                                              'A hora de fechamento não pode ser menor que a hora de abertura.'),
+                                          duration: Duration(seconds: 4),
+                                        ),
+                                      );
+                                    } else {
+                                      var d = Desk(
+                                        UID_coworking:
+                                            AuthController().idUsuario(),
+                                        titulo: _titleName.text,
+                                        valor: _valueHour.text,
+                                        num_mesas: _numTables.text,
+                                        cep: _cepController.text,
+                                        endereco: _enderecoController.text,
+                                        num_endereco: _numAddress.text,
+                                        cidade: _cidadeController.text,
+                                        uf: _estadoController.text,
+                                        bairro: _bairroController.text,
+                                        complemento: _complementoAddress.text,
+                                        descricao: _description.text,
+                                        cafe: cafe,
+                                        estacionamento: estacionamento,
+                                        ar_condicionado: arCondicionado,
+                                        espaco_interativo: espacoInterativo,
+                                        bicicletario: bicicletario,
+                                        acessibilidade: acessibilidade,
+                                        criado_em: DateTime.now().toString(),
+                                        atualizado_em:
+                                            DateTime.now().toString(),
+                                        hr_abertura: _aberturaController.text,
+                                        hr_fechamento:
+                                            _fechamentoController.text,
+                                      );
+                                      DeskController().addDesk(
+                                          d, _pickedImagesWeb, context);
+                                    }
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(

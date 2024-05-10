@@ -56,6 +56,13 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
     },
   );
 
+  final capacidadeFormat = MaskTextInputFormatter(
+    mask: '####',
+    filter: {
+      '#': RegExp(r'[0-9]'),
+    },
+  );
+
   final List<File> _pickedImages = [];
   final List<Uint8List> _pickedImagesWeb = [];
 
@@ -81,6 +88,18 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
     tvController.dispose();
 
     super.dispose();
+  }
+
+  Future<void> _selectTime(
+      BuildContext context, TextEditingController controller) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      controller.text = picked.format(context);
+      setState(() {});
+    }
   }
 
   @override
@@ -136,13 +155,16 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                 flex: 1,
                                 child: TextFormField(
                                   controller: aberturaController,
-                                  inputFormatters: [_hourFormatter],
+                                  readOnly: true,
+                                  onTap: () =>
+                                      _selectTime(context, aberturaController),
                                   decoration: InputDecoration(
                                     labelText: 'Abertura',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(2),
                                     ),
+                                    suffixIcon: Icon(Icons.access_time),
                                   ),
                                 ),
                               ),
@@ -151,13 +173,16 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                 flex: 1,
                                 child: TextFormField(
                                   controller: fechamentoController,
-                                  inputFormatters: [_hourFormatter],
+                                  readOnly: true,
+                                  onTap: () => _selectTime(
+                                      context, fechamentoController),
                                   decoration: InputDecoration(
                                     labelText: 'Fechamento',
                                     isDense: true,
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(2),
                                     ),
+                                    suffixIcon: Icon(Icons.access_time),
                                   ),
                                 ),
                               ),
@@ -181,6 +206,7 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                 flex: 1,
                                 child: TextFormField(
                                   controller: capacidadeController,
+                                  inputFormatters: [capacidadeFormat],
                                   decoration: InputDecoration(
                                     labelText: 'Capacidade',
                                     isDense: true,
@@ -611,6 +637,9 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     color: Color.fromRGBO(177, 47, 47, 1)),
                               ),
                               onPressed: () {
+                                String horaAbertura = aberturaController.text;
+                                String horaFechamento =
+                                    fechamentoController.text;
                                 if (tituloController.text.isNotEmpty &&
                                     aberturaController.text.isNotEmpty &&
                                     fechamentoController.text.isNotEmpty &&
@@ -623,36 +652,50 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                                     bairroController.text.isNotEmpty &&
                                     cidadeController.text.isNotEmpty &&
                                     ufController.text.isNotEmpty) {
-                                  MeetingRoom meetingRoom = MeetingRoom(
-                                    UID_coworking: AuthController().idUsuario(),
-                                    titulo: tituloController.text,
-                                    valor: valorController.text,
-                                    capacidade: capacidadeController.text,
-                                    cep: cepController.text,
-                                    endereco: logradouroController.text,
-                                    num_endereco: numeroController.text,
-                                    cidade: cidadeController.text,
-                                    uf: ufController.text,
-                                    bairro: bairroController.text,
-                                    complemento: complementoController.text,
-                                    descricao: descricaoController.text,
-                                    fotos: [],
-                                    projetor: projetorController.value,
-                                    videoconferencia:
-                                        videoconferenciaController.value,
-                                    ar_condicionado:
-                                        arCondicionadoController.value,
-                                    quadro_branco: quadroBrancoController.value,
-                                    tv: tvController.value,
-                                    acessibilidade:
-                                        acessibilidadeController.value,
-                                    criado_em: DateTime.now().toString(),
-                                    atualizado_em: DateTime.now().toString(),
-                                    hr_abertura: aberturaController.text,
-                                    hr_fechamento: fechamentoController.text,
-                                  );
-                                  meetingRoomController.addMeetingRoom(
-                                      meetingRoom, _pickedImagesWeb, context);
+                                  if (horaFechamento.compareTo(horaAbertura) <
+                                      0) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        backgroundColor: Colors.red,
+                                        content: Text(
+                                            'A hora de fechamento não pode ser menor que a hora de abertura.'),
+                                        duration: Duration(seconds: 4),
+                                      ),
+                                    );
+                                  } else {
+                                    MeetingRoom meetingRoom = MeetingRoom(
+                                      UID_coworking:
+                                          AuthController().idUsuario(),
+                                      titulo: tituloController.text,
+                                      valor: valorController.text,
+                                      capacidade: capacidadeController.text,
+                                      cep: cepController.text,
+                                      endereco: logradouroController.text,
+                                      num_endereco: numeroController.text,
+                                      cidade: cidadeController.text,
+                                      uf: ufController.text,
+                                      bairro: bairroController.text,
+                                      complemento: complementoController.text,
+                                      descricao: descricaoController.text,
+                                      fotos: [],
+                                      projetor: projetorController.value,
+                                      videoconferencia:
+                                          videoconferenciaController.value,
+                                      ar_condicionado:
+                                          arCondicionadoController.value,
+                                      quadro_branco:
+                                          quadroBrancoController.value,
+                                      tv: tvController.value,
+                                      acessibilidade:
+                                          acessibilidadeController.value,
+                                      criado_em: DateTime.now().toString(),
+                                      atualizado_em: DateTime.now().toString(),
+                                      hr_abertura: aberturaController.text,
+                                      hr_fechamento: fechamentoController.text,
+                                    );
+                                    meetingRoomController.addMeetingRoom(
+                                        meetingRoom, _pickedImagesWeb, context);
+                                  }
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
