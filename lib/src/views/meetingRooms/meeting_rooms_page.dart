@@ -9,8 +9,6 @@ import 'addMeetingRooms/components/edit_meeting_room_form.dart';
 class MeetingRoomsPage extends StatelessWidget {
   final MeetingRoomController meetingRoomController = MeetingRoomController();
 
-  MeetingRoomsPage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +23,14 @@ class MeetingRoomsPage extends StatelessWidget {
                   padding: const EdgeInsets.all(10.0),
                   child: RawMaterialButton(
                     onPressed: () async {
-                      var numRoomStream = MeetingRoomController().contarSalas();
-                      dynamic roomPlan = await UserController().getPlanMeet();
+                      try {
+                        // Aguarda pela primeira emissão do Stream para obter o número de salas
+                        var numRooms =
+                            await meetingRoomController.contarSalas().first;
+                        // Aguarda pela obtenção do plano de reuniões do usuário
+                        dynamic roomPlan = await UserController().getPlanMeet();
 
-                      numRoomStream.listen((numRooms) {
+                        // Verifica se o número de salas é menor que o permitido pelo plano
                         if (numRooms < roomPlan) {
                           showDialog(
                               barrierDismissible: false,
@@ -45,9 +47,17 @@ class MeetingRoomsPage extends StatelessWidget {
                             ),
                           );
                         }
-                      }, onError: (e) {
+                      } catch (e) {
                         print('Erro ao receber número de salas: $e');
-                      });
+                        // Trata o erro emitido pelo Stream ou por outras falhas
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red[300],
+                            content:
+                                Text('Erro ao processar a solicitação: $e'),
+                          ),
+                        );
+                      }
                     },
                     fillColor: const Color.fromARGB(255, 232, 236, 239),
                     shape: RoundedRectangleBorder(

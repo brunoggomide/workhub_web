@@ -8,7 +8,7 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
 import '../../../../models/meeting_room_model.dart';
 import '../../../../services/cep.dart';
-import '../../../desks/components/moneyFormat.dart';
+import '../../../utils/moneyFormat.dart';
 import '../../../utils/timeFormat.dart';
 
 class EditMeetingRoomForm extends StatefulWidget {
@@ -685,7 +685,7 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                 }
                               },
                               child: const Text(
-                                'SALVAR',
+                                'EDITAR',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Color.fromRGBO(177, 47, 47, 1),

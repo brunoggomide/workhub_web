@@ -10,8 +10,8 @@ import 'package:workhub_web/src/models/desk_model.dart';
 import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/user/user_controller.dart';
 import '../../services/cep.dart';
+import '../utils/moneyFormat.dart';
 import '../utils/timeFormat.dart';
-import 'components/moneyFormat.dart';
 
 class EditDesk extends StatefulWidget {
   final String id;
@@ -634,8 +634,7 @@ class _EditDeskState extends State<EditDesk> {
                                       _cidadeController.text.isNotEmpty &&
                                       _ufController.text.isNotEmpty &&
                                       _bairroController.text.isNotEmpty &&
-                                      _descricaoController.text.isNotEmpty &&
-                                      _pickedImagesWeb.isNotEmpty) {
+                                      _descricaoController.text.isNotEmpty) {
                                     var d = Desk(
                                       UID_coworking:
                                           AuthController().idUsuario(),
@@ -686,7 +685,7 @@ class _EditDeskState extends State<EditDesk> {
                                 }
                               },
                               child: const Text(
-                                'SALVAR',
+                                'EDITAR',
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Color.fromRGBO(177, 47, 47, 1),

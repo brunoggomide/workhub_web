@@ -10,8 +10,8 @@ import 'package:workhub_web/src/models/desk_model.dart';
 import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/user/user_controller.dart';
 import '../../services/cep.dart';
+import '../utils/moneyFormat.dart';
 import '../utils/timeFormat.dart';
-import 'components/moneyFormat.dart';
 
 class NewDesk extends StatefulWidget {
   const NewDesk({Key? key}) : super(key: key);
@@ -589,8 +589,7 @@ class _NewDeskState extends State<NewDesk> {
                                       _cidadeController.text.isNotEmpty &&
                                       _estadoController.text.isNotEmpty &&
                                       _bairroController.text.isNotEmpty &&
-                                      _description.text.isNotEmpty &&
-                                      _pickedImagesWeb.isNotEmpty) {
+                                      _description.text.isNotEmpty) {
                                     var d = Desk(
                                       UID_coworking:
                                           AuthController().idUsuario(),

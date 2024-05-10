@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:workhub_web/src/controllers/auth/auth_controller.dart';
 import 'package:workhub_web/src/controllers/user/user_controller.dart';
 import 'package:workhub_web/src/views/desks/editDesk.dart';
 import 'package:workhub_web/src/views/desks/newDesk.dart';

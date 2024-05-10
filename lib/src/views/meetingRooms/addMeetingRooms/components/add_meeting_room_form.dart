@@ -9,7 +9,7 @@ import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
 import '../../../../models/meeting_room_model.dart';
 import '../../../../services/cep.dart';
-import '../../../desks/components/moneyFormat.dart';
+import '../../../utils/moneyFormat.dart';
 import '../../../utils/timeFormat.dart';
 
 class AddMeetingRoomForm extends StatefulWidget {
