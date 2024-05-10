@@ -2,14 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class BookingDao {
-  // Stream<QuerySnapshot> listarConfirmados(String id) {
-  //   return FirebaseFirestore.instance
-  //       .collection('reservas')
-  //       .where('uid_empresa', isEqualTo: id)
-  //       .where('status', isEqualTo: 'Finalizado')
-  //       .snapshots();
-  // }
-
   Stream<QuerySnapshot> listarConfirmados(String userId) {
     var now = DateTime.now();
     var tomorrow = now.subtract(Duration(days: 1));

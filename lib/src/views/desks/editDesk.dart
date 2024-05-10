@@ -51,7 +51,6 @@ class _EditDeskState extends State<EditDesk> {
   bool espacoInterativo = false;
   bool bicicletario = false;
   bool acessibilidade = false;
-  bool status = true;
   List<File> _pickedImages = [];
   List<Uint8List> _pickedImagesWeb = [];
   final cepFormat = MaskTextInputFormatter(
@@ -659,7 +658,6 @@ class _EditDeskState extends State<EditDesk> {
                                       acessibilidade: acessibilidade,
                                       criado_em: DateTime.now().toString(),
                                       atualizado_em: DateTime.now().toString(),
-                                      status: true,
                                       hr_abertura: _aberturaController.text,
                                       hr_fechamento: _fechamentoController.text,
                                     );

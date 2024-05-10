@@ -97,12 +97,8 @@ class EditPlan extends StatelessWidget {
           plan['meet'],
           plan['desk'],
           () {
-            print(plan['deskNum']);
-            print(plan['meetNum']);
             if (plan['deskNum'] < numDesk) {
-              print('aqui');
             } else if (plan['meetNum'] < numMeet) {
-              print('elseif');
             } else {
               var e = UsuarioModel(
                 AuthController().idUsuario(),

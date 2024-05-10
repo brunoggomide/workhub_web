@@ -613,7 +613,6 @@ class _NewDeskState extends State<NewDesk> {
                                       acessibilidade: acessibilidade,
                                       criado_em: DateTime.now().toString(),
                                       atualizado_em: DateTime.now().toString(),
-                                      status: true,
                                       hr_abertura: _aberturaController.text,
                                       hr_fechamento: _fechamentoController.text,
                                     );

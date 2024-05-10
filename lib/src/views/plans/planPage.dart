@@ -60,7 +60,6 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão Basic Mensal pressionado');
                   },
                 ),
                 _buildPlanCard(
@@ -77,7 +76,6 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão Plus Mensal pressionado');
                   },
                 ),
                 _buildPlanCard(
@@ -94,7 +92,6 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão Premium Mensal pressionado');
                   },
                 ),
               ],
@@ -118,7 +115,6 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão Basic anual pressionado');
                   },
                 ),
                 _buildPlanCard(
@@ -135,7 +131,6 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão Plus anual pressionado');
                   },
                 ),
                 _buildPlanCard(
@@ -152,7 +147,6 @@ class _PlanPageState extends State<PlanPage> {
                         },
                       ),
                     );
-                    print('Botão Premium Anual pressionado');
                   },
                 ),
               ],

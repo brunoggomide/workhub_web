@@ -149,14 +149,11 @@ class MeetingRoomController {
       String uidCoworking, String roomId) async {
     final storage = FirebaseStorage.instance;
     final folderPath = 'meeting_rooms_images/$uidCoworking/$roomId';
-    print(folderPath);
 
     final ListResult result = await storage.ref(folderPath).listAll();
-    print(result.items);
 
     for (final Reference ref in result.items) {
       await ref.delete();
-      print("imagem deletada");
     }
   }
 

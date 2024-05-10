@@ -22,7 +22,6 @@ class Desk {
   final bool acessibilidade;
   final String? criado_em;
   final String? atualizado_em;
-  final bool status; /////////////// nao esquecer---------------------------
   final String hr_abertura;
   final String hr_fechamento;
 
@@ -48,7 +47,6 @@ class Desk {
       required this.acessibilidade,
       this.criado_em,
       required this.atualizado_em,
-      required this.status,
       required this.hr_abertura,
       required this.hr_fechamento});
 
@@ -74,7 +72,6 @@ class Desk {
       'bicicletario': bicicletario,
       'acessibilidade': acessibilidade,
       'atualizado_em': FieldValue.serverTimestamp(),
-      'status': status,
       'hr_abertura': hr_abertura,
       'hr_fechamento': hr_fechamento,
     };
@@ -109,7 +106,6 @@ class Desk {
       espaco_interativo: json['espaco_interativo'] ?? false,
       bicicletario: json['bicicletario'] ?? false,
       acessibilidade: json['acessibilidade'] ?? false,
-      status: json['status'] ?? false,
       criado_em: json['criado_em'] is Timestamp
           ? (json['criado_em'] as Timestamp).toDate().toString()
           : json['criado_em'] ?? '',
@@ -143,7 +139,6 @@ class Desk {
     bool? acessibilidade,
     Timestamp? atualizado_em,
     Timestamp? criado_em,
-    bool? status,
     String? hr_abertura,
     String? hr_fechamento,
   }) {
@@ -169,7 +164,6 @@ class Desk {
       acessibilidade: acessibilidade ?? this.acessibilidade,
       atualizado_em: atualizado_em?.toDate().toString() ?? this.atualizado_em,
       criado_em: criado_em?.toDate().toString() ?? this.criado_em,
-      status: status ?? this.status,
       hr_abertura: hr_abertura ?? this.hr_abertura,
       hr_fechamento: hr_fechamento ?? this.hr_fechamento,
     );
