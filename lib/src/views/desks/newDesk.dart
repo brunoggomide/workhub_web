@@ -11,7 +11,6 @@ import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/user/user_controller.dart';
 import '../../services/cep.dart';
 import '../utils/moneyFormat.dart';
-import '../utils/timeFormat.dart';
 
 class NewDesk extends StatefulWidget {
   const NewDesk({Key? key}) : super(key: key);
@@ -35,7 +34,6 @@ class _NewDeskState extends State<NewDesk> {
   final _aberturaController = TextEditingController();
   final _fechamentoController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
-  final HourTextInputFormatter _hourFormatter = HourTextInputFormatter();
   bool cafe = false;
   bool estacionamento = false;
   bool arCondicionado = false;

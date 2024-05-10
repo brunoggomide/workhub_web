@@ -9,7 +9,6 @@ import '../../../../controllers/meeting_room/meeting_room_controller.dart';
 import '../../../../models/meeting_room_model.dart';
 import '../../../../services/cep.dart';
 import '../../../utils/moneyFormat.dart';
-import '../../../utils/timeFormat.dart';
 
 class EditMeetingRoomForm extends StatefulWidget {
   final String documentId;
@@ -42,7 +41,6 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   final TextEditingController valorController = TextEditingController();
   final TextEditingController capacidadeController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
-  final HourTextInputFormatter _hourFormatter = HourTextInputFormatter();
 
   final ValueNotifier<bool> acessibilidadeController =
       ValueNotifier<bool>(false);
