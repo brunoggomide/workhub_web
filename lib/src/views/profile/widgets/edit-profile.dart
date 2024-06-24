@@ -62,7 +62,7 @@ class _EditProfileState extends State<EditProfile> {
                   const Padding(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      'Editar Perfilg',
+                      'Editar Perfil',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,

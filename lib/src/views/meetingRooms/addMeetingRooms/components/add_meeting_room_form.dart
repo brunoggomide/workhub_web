@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import '../../../../controllers/auth/auth_controller.dart';
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
@@ -46,6 +47,8 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
   final ValueNotifier<bool> tvController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> videoconferenciaController =
       ValueNotifier<bool>(false);
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
 
   final cepFormat = MaskTextInputFormatter(
     mask: '#####-###',
@@ -623,97 +626,117 @@ class _AddMeetingRoomFormState extends State<AddMeetingRoomForm> {
                           SizedBox(height: 12.0),
                           Center(
                               child: SizedBox(
-                            height: 50,
-                            width: 120,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                side: const BorderSide(
-                                    width: 2,
-                                    color: Color.fromRGBO(177, 47, 47, 1)),
-                              ),
-                              onPressed: () {
-                                String horaAbertura = aberturaController.text;
-                                String horaFechamento =
-                                    fechamentoController.text;
-                                if (tituloController.text.isNotEmpty &&
-                                    aberturaController.text.isNotEmpty &&
-                                    fechamentoController.text.isNotEmpty &&
-                                    descricaoController.text.isNotEmpty &&
-                                    valorController.text.isNotEmpty &&
-                                    capacidadeController.text.isNotEmpty &&
-                                    cepController.text.isNotEmpty &&
-                                    logradouroController.text.isNotEmpty &&
-                                    numeroController.text.isNotEmpty &&
-                                    bairroController.text.isNotEmpty &&
-                                    cidadeController.text.isNotEmpty &&
-                                    ufController.text.isNotEmpty) {
-                                  if (horaFechamento.compareTo(horaAbertura) <
-                                      0) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        backgroundColor: Colors.red,
-                                        content: Text(
-                                            'A hora de fechamento não pode ser menor que a hora de abertura.'),
-                                        duration: Duration(seconds: 4),
+                                  height: 50,
+                                  width: 120,
+                                  child: RoundedLoadingButton(
+                                    controller: _btnController,
+                                    onPressed: () async {
+                                      String horaAbertura =
+                                          aberturaController.text;
+                                      String horaFechamento =
+                                          fechamentoController.text;
+                                      if (tituloController.text.isNotEmpty &&
+                                          aberturaController.text.isNotEmpty &&
+                                          fechamentoController
+                                              .text.isNotEmpty &&
+                                          descricaoController.text.isNotEmpty &&
+                                          valorController.text.isNotEmpty &&
+                                          capacidadeController
+                                              .text.isNotEmpty &&
+                                          cepController.text.isNotEmpty &&
+                                          logradouroController
+                                              .text.isNotEmpty &&
+                                          numeroController.text.isNotEmpty &&
+                                          bairroController.text.isNotEmpty &&
+                                          cidadeController.text.isNotEmpty &&
+                                          ufController.text.isNotEmpty) {
+                                        if (horaFechamento
+                                                .compareTo(horaAbertura) <
+                                            0) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                  'A hora de fechamento não pode ser menor que a hora de abertura.'),
+                                              duration: Duration(seconds: 4),
+                                            ),
+                                          );
+                                          _btnController.reset();
+                                        } else {
+                                          MeetingRoom meetingRoom = MeetingRoom(
+                                            UID_coworking:
+                                                AuthController().idUsuario(),
+                                            titulo: tituloController.text,
+                                            valor: valorController.text,
+                                            capacidade:
+                                                capacidadeController.text,
+                                            cep: cepController.text,
+                                            endereco: logradouroController.text,
+                                            num_endereco: numeroController.text,
+                                            cidade: cidadeController.text,
+                                            uf: ufController.text,
+                                            bairro: bairroController.text,
+                                            complemento:
+                                                complementoController.text,
+                                            descricao: descricaoController.text,
+                                            fotos: [],
+                                            projetor: projetorController.value,
+                                            videoconferencia:
+                                                videoconferenciaController
+                                                    .value,
+                                            ar_condicionado:
+                                                arCondicionadoController.value,
+                                            quadro_branco:
+                                                quadroBrancoController.value,
+                                            tv: tvController.value,
+                                            acessibilidade:
+                                                acessibilidadeController.value,
+                                            criado_em:
+                                                DateTime.now().toString(),
+                                            atualizado_em:
+                                                DateTime.now().toString(),
+                                            hr_abertura:
+                                                aberturaController.text,
+                                            hr_fechamento:
+                                                fechamentoController.text,
+                                          );
+                                          meetingRoomController.addMeetingRoom(
+                                              meetingRoom,
+                                              _pickedImagesWeb,
+                                              context);
+
+                                          // Simula o tempo de carregamento
+                                          Future.delayed(
+                                              const Duration(seconds: 10), () {
+                                            _btnController.success();
+                                          });
+                                        }
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Colors.red,
+                                            content: Text(
+                                                'Preencha todos os campos obrigatórios.'),
+                                          ),
+                                        );
+                                        _btnController.reset();
+                                      }
+                                    },
+                                    child: const Text(
+                                      'SALVAR',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Color.fromRGBO(177, 47, 47, 1),
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    );
-                                  } else {
-                                    MeetingRoom meetingRoom = MeetingRoom(
-                                      UID_coworking:
-                                          AuthController().idUsuario(),
-                                      titulo: tituloController.text,
-                                      valor: valorController.text,
-                                      capacidade: capacidadeController.text,
-                                      cep: cepController.text,
-                                      endereco: logradouroController.text,
-                                      num_endereco: numeroController.text,
-                                      cidade: cidadeController.text,
-                                      uf: ufController.text,
-                                      bairro: bairroController.text,
-                                      complemento: complementoController.text,
-                                      descricao: descricaoController.text,
-                                      fotos: [],
-                                      projetor: projetorController.value,
-                                      videoconferencia:
-                                          videoconferenciaController.value,
-                                      ar_condicionado:
-                                          arCondicionadoController.value,
-                                      quadro_branco:
-                                          quadroBrancoController.value,
-                                      tv: tvController.value,
-                                      acessibilidade:
-                                          acessibilidadeController.value,
-                                      criado_em: DateTime.now().toString(),
-                                      atualizado_em: DateTime.now().toString(),
-                                      hr_abertura: aberturaController.text,
-                                      hr_fechamento: fechamentoController.text,
-                                    );
-                                    meetingRoomController.addMeetingRoom(
-                                        meetingRoom, _pickedImagesWeb, context);
-                                  }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      backgroundColor: Colors.red,
-                                      content: Text(
-                                          'Preencha todos os campos obrigatórios.'),
                                     ),
-                                  );
-                                }
-                              },
-                              child: const Text(
-                                'SALVAR',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromRGBO(177, 47, 47, 1),
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ))
+                                    color: Colors.transparent,
+                                    successColor: Colors.green,
+                                    width: 200,
+                                    borderRadius: 4,
+                                  )))
                         ],
                       ),
                     ),

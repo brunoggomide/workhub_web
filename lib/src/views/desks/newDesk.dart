@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:workhub_web/src/controllers/desks/desk_controller.dart';
 import 'package:workhub_web/src/models/desk_model.dart';
 
@@ -34,6 +35,8 @@ class _NewDeskState extends State<NewDesk> {
   final _aberturaController = TextEditingController();
   final _fechamentoController = TextEditingController();
   final MoneyTextInputFormatter _moneyFormatter = MoneyTextInputFormatter();
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
   bool cafe = false;
   bool estacionamento = false;
   bool arCondicionado = false;
@@ -425,7 +428,7 @@ class _NewDeskState extends State<NewDesk> {
                                             Row(
                                               children: [
                                                 Icon(
-                                                  Icons.severe_cold,
+                                                  Icons.ac_unit,
                                                   size: 20,
                                                 ),
                                                 Text('Ar-Condicionado'),
@@ -576,113 +579,122 @@ class _NewDeskState extends State<NewDesk> {
                         SizedBox(height: 12.0),
                         Center(
                           child: SizedBox(
-                            height: 50,
-                            width: 120,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                side: const BorderSide(
-                                    width: 2,
-                                    color: Color.fromRGBO(177, 47, 47, 1)),
-                              ),
-                              onPressed: () async {
-                                int numMesas =
-                                    await DeskController().contarMesas();
-                                dynamic planDesk =
-                                    await UserController().getPlanDesk();
-                                String inputText = _numTables.text;
-                                int additionalMesas = int.parse(inputText);
-                                var mesas = numMesas + additionalMesas;
-                                String horaAbertura = _aberturaController.text;
-                                String horaFechamento =
-                                    _fechamentoController.text;
-                                if (mesas <= planDesk) {
-                                  if (_titleName.text.isNotEmpty &&
-                                      _valueHour.text.isNotEmpty &&
-                                      _numTables.text.isNotEmpty &&
-                                      _cepController.text.isNotEmpty &&
-                                      _enderecoController.text.isNotEmpty &&
-                                      _numAddress.text.isNotEmpty &&
-                                      _cidadeController.text.isNotEmpty &&
-                                      _estadoController.text.isNotEmpty &&
-                                      _bairroController.text.isNotEmpty &&
-                                      _description.text.isNotEmpty) {
-                                    if (horaFechamento.compareTo(horaAbertura) <
-                                        0) {
+                              height: 50,
+                              width: 120,
+                              child: RoundedLoadingButton(
+                                controller: _btnController,
+                                onPressed: () async {
+                                  int numMesas =
+                                      await DeskController().contarMesas();
+                                  dynamic planDesk =
+                                      await UserController().getPlanDesk();
+                                  String inputText = _numTables.text;
+                                  int additionalMesas = int.parse(inputText);
+                                  var mesas = numMesas + additionalMesas;
+                                  String horaAbertura =
+                                      _aberturaController.text;
+                                  String horaFechamento =
+                                      _fechamentoController.text;
+                                  if (mesas <= planDesk) {
+                                    if (_titleName.text.isNotEmpty &&
+                                        _valueHour.text.isNotEmpty &&
+                                        _numTables.text.isNotEmpty &&
+                                        _cepController.text.isNotEmpty &&
+                                        _enderecoController.text.isNotEmpty &&
+                                        _numAddress.text.isNotEmpty &&
+                                        _cidadeController.text.isNotEmpty &&
+                                        _estadoController.text.isNotEmpty &&
+                                        _bairroController.text.isNotEmpty &&
+                                        _description.text.isNotEmpty) {
+                                      if (horaFechamento
+                                              .compareTo(horaAbertura) <
+                                          0) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            backgroundColor: Colors.red,
+                                            content: Text(
+                                                'A hora de fechamento não pode ser menor que a hora de abertura.'),
+                                            duration: Duration(seconds: 4),
+                                          ),
+                                        );
+                                        _btnController.reset();
+                                      } else {
+                                        var d = Desk(
+                                          UID_coworking:
+                                              AuthController().idUsuario(),
+                                          titulo: _titleName.text,
+                                          valor: _valueHour.text,
+                                          num_mesas: _numTables.text,
+                                          cep: _cepController.text,
+                                          endereco: _enderecoController.text,
+                                          num_endereco: _numAddress.text,
+                                          cidade: _cidadeController.text,
+                                          uf: _estadoController.text,
+                                          bairro: _bairroController.text,
+                                          complemento: _complementoAddress.text,
+                                          descricao: _description.text,
+                                          cafe: cafe,
+                                          estacionamento: estacionamento,
+                                          ar_condicionado: arCondicionado,
+                                          espaco_interativo: espacoInterativo,
+                                          bicicletario: bicicletario,
+                                          acessibilidade: acessibilidade,
+                                          criado_em: DateTime.now().toString(),
+                                          atualizado_em:
+                                              DateTime.now().toString(),
+                                          hr_abertura: _aberturaController.text,
+                                          hr_fechamento:
+                                              _fechamentoController.text,
+                                        );
+                                        DeskController().addDesk(
+                                            d, _pickedImagesWeb, context);
+
+                                        // Simula o tempo de carregamento
+                                        Future.delayed(
+                                            const Duration(seconds: 10), () {
+                                          _btnController.success();
+                                        });
+                                      }
+                                    } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(
-                                        const SnackBar(
-                                          backgroundColor: Colors.red,
-                                          content: Text(
-                                              'A hora de fechamento não pode ser menor que a hora de abertura.'),
-                                          duration: Duration(seconds: 4),
+                                        SnackBar(
+                                          backgroundColor: Colors.red[300],
+                                          content: const Text(
+                                            'Preencha todos os campos',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          duration: const Duration(seconds: 3),
                                         ),
                                       );
-                                    } else {
-                                      var d = Desk(
-                                        UID_coworking:
-                                            AuthController().idUsuario(),
-                                        titulo: _titleName.text,
-                                        valor: _valueHour.text,
-                                        num_mesas: _numTables.text,
-                                        cep: _cepController.text,
-                                        endereco: _enderecoController.text,
-                                        num_endereco: _numAddress.text,
-                                        cidade: _cidadeController.text,
-                                        uf: _estadoController.text,
-                                        bairro: _bairroController.text,
-                                        complemento: _complementoAddress.text,
-                                        descricao: _description.text,
-                                        cafe: cafe,
-                                        estacionamento: estacionamento,
-                                        ar_condicionado: arCondicionado,
-                                        espaco_interativo: espacoInterativo,
-                                        bicicletario: bicicletario,
-                                        acessibilidade: acessibilidade,
-                                        criado_em: DateTime.now().toString(),
-                                        atualizado_em:
-                                            DateTime.now().toString(),
-                                        hr_abertura: _aberturaController.text,
-                                        hr_fechamento:
-                                            _fechamentoController.text,
-                                      );
-                                      DeskController().addDesk(
-                                          d, _pickedImagesWeb, context);
+                                      _btnController.reset();
                                     }
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         backgroundColor: Colors.red[300],
                                         content: const Text(
-                                          'Preencha todos os campos',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        duration: const Duration(seconds: 3),
+                                            'Você ultrapassou o limite de cadastros de mesas do seu plano.'),
                                       ),
                                     );
+                                    _btnController.reset();
                                   }
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      backgroundColor: Colors.red[300],
-                                      content: const Text(
-                                          'Você ultrapassou o limite de cadastros de mesas do seu plano.'),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: const Text(
-                                'SALVAR',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Color.fromRGBO(177, 47, 47, 1),
-                                  fontWeight: FontWeight.bold,
+                                },
+                                child: const Text(
+                                  'SALVAR',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Color.fromRGBO(177, 47, 47, 1),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ),
+                                color: Colors.transparent,
+                                successColor: Colors.green,
+                                width: 200,
+                                borderRadius: 4,
+                              )),
                         ),
                       ],
                     ),

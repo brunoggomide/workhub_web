@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 import '../../../../controllers/meeting_room/meeting_room_controller.dart';
 import '../../../../models/meeting_room_model.dart';
@@ -51,6 +52,8 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
   final ValueNotifier<bool> tvController = ValueNotifier<bool>(false);
   final ValueNotifier<bool> videoconferenciaController =
       ValueNotifier<bool>(false);
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
 
   final cepFormat = MaskTextInputFormatter(
     mask: '#####-###',
@@ -642,15 +645,8 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                               child: SizedBox(
                             height: 50,
                             width: 120,
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                side: const BorderSide(
-                                    width: 2,
-                                    color: Color.fromRGBO(177, 47, 47, 1)),
-                              ),
+                            child: RoundedLoadingButton(
+                              controller: _btnController,
                               onPressed: () {
                                 if (tituloController.text.isNotEmpty &&
                                     aberturaController.text.isNotEmpty &&
@@ -694,10 +690,16 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                   );
 
                                   meetingRoomController.updateMeetingRoom(
-                                      widget.documentId,
-                                      meetingRoomAtualizado,
-                                      _pickedImagesWeb,
-                                      context);
+                                    widget.documentId,
+                                    meetingRoomAtualizado,
+                                    _pickedImagesWeb,
+                                    context,
+                                  );
+
+                                  Future.delayed(const Duration(seconds: 10),
+                                      () {
+                                    _btnController.success();
+                                  });
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
@@ -706,6 +708,8 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                           'Preencha todos os campos obrigatórios.'),
                                     ),
                                   );
+
+                                  _btnController.reset();
                                 }
                               },
                               child: const Text(
@@ -716,6 +720,10 @@ class _EditMeetingRoomFormState extends State<EditMeetingRoomForm> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              color: Colors.transparent,
+                              successColor: Colors.green,
+                              width: 200,
+                              borderRadius: 4,
                             ),
                           ))
                         ],
